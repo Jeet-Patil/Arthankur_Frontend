@@ -6,6 +6,7 @@ import Login from './components/Login';
 import Register from './components/Register';
 import DashboardRouter from './components/DashboardRouter';
 import ProtectedRoute from './components/ProtectedRoute';
+import FinancialTools from './components/financial/FinancialTools';
 import './App.css';
 
 const App = () => {
@@ -33,6 +34,54 @@ const App = () => {
           element={
             <ProtectedRoute>
               <DashboardRouter />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/financial-tools"
+          element={
+            <ProtectedRoute>
+              <FinancialTools />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/meetings"
+          element={
+            <ProtectedRoute>
+              <div>Meetings Page</div>
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/loans"
+          element={
+            <ProtectedRoute>
+              <div>Loans Page</div>
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/schemes"
+          element={
+            <ProtectedRoute>
+              <div>Schemes Page</div>
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/tax-filing"
+          element={
+            <ProtectedRoute>
+              <div>Tax Filing Page</div>
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/compliance"
+          element={
+            <ProtectedRoute>
+              <div>Compliance Page</div>
             </ProtectedRoute>
           }
         />
