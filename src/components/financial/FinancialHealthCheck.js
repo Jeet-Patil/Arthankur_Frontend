@@ -12,9 +12,6 @@ const FinancialHealthCheck = () => {
     netIncome: '',
     operatingCashFlow: '',
     annualSales: '',
-    accountsReceivable: '',
-    accountsPayable: '',
-    totalAssets: '',
   });
 
   const [healthScore, setHealthScore] = useState(null);
@@ -28,6 +25,16 @@ const FinancialHealthCheck = () => {
     });
   };
 
+  const getScoreColor = (category) => {
+    switch (category) {
+      case 'Excellent': return 'text-green-600';
+      case 'Good': return 'text-blue-600';
+      case 'Fair': return 'text-yellow-600';
+      case 'Poor': return 'text-red-600';
+      default: return 'text-gray-600';
+    }
+  };
+
   const calculateMetrics = () => {
     const {
       currentAssets,
@@ -39,9 +46,6 @@ const FinancialHealthCheck = () => {
       netIncome,
       operatingCashFlow,
       annualSales,
-      accountsReceivable,
-      accountsPayable,
-      totalAssets,
     } = financialData;
 
     // Convert string inputs to numbers
@@ -54,9 +58,6 @@ const FinancialHealthCheck = () => {
     const income = parseFloat(netIncome) || 0;
     const cashFlow = parseFloat(operatingCashFlow) || 0;
     const sales = parseFloat(annualSales) || 0;
-    const ar = parseFloat(accountsReceivable) || 0;
-    const ap = parseFloat(accountsPayable) || 0;
-    const ta = parseFloat(totalAssets) || 0;
 
     return {
       currentRatio: ca / cl,
@@ -66,11 +67,7 @@ const FinancialHealthCheck = () => {
       workingCapital: ca - cl,
       cashFlow: cashFlow,
       returnOnEquity: (income / equity) * 100,
-      inventoryTurnover: sales / inv,
-      returnOnAssets: (income / ta) * 100,
-      receivablesTurnover: sales / ar,
-      payablesTurnover: sales / ap,
-      assetTurnover: sales / ta
+      inventoryTurnover: sales / inv
     };
   };
 
@@ -81,19 +78,20 @@ const FinancialHealthCheck = () => {
     const metrics = calculateMetrics();
     setMetrics(metrics);
 
-    // Calculate health score
+    // Calculate health score (out of 100)
     let score = 0;
     let recommendations = [];
 
-    // Current Ratio Analysis
-    if (metrics.currentRatio >= 2) score += 15;
-    else if (metrics.currentRatio >= 1.5) score += 10;
+    // Current Ratio Analysis (20 points)
+    if (metrics.currentRatio >= 2) score += 20;
+    else if (metrics.currentRatio >= 1.5) score += 15;
+    else if (metrics.currentRatio >= 1) score += 10;
     else {
       score += 5;
       recommendations.push("Improve current ratio to strengthen short-term liquidity");
     }
 
-    // Quick Ratio Analysis
+    // Quick Ratio Analysis (15 points)
     if (metrics.quickRatio >= 1) score += 15;
     else if (metrics.quickRatio >= 0.8) score += 10;
     else {
@@ -101,7 +99,7 @@ const FinancialHealthCheck = () => {
       recommendations.push("Consider improving quick ratio for better immediate liquidity");
     }
 
-    // Debt to Equity Analysis
+    // Debt to Equity Analysis (15 points)
     if (metrics.debtToEquity <= 1) score += 15;
     else if (metrics.debtToEquity <= 1.5) score += 10;
     else {
@@ -109,15 +107,16 @@ const FinancialHealthCheck = () => {
       recommendations.push("Review debt levels to optimize capital structure");
     }
 
-    // Profit Margin Analysis
-    if (metrics.profitMargin >= 20) score += 15;
-    else if (metrics.profitMargin >= 10) score += 10;
+    // Profit Margin Analysis (20 points)
+    if (metrics.profitMargin >= 20) score += 20;
+    else if (metrics.profitMargin >= 10) score += 15;
+    else if (metrics.profitMargin >= 5) score += 10;
     else {
       score += 5;
       recommendations.push("Focus on improving profit margins through cost optimization");
     }
 
-    // ROE Analysis
+    // ROE Analysis (15 points)
     if (metrics.returnOnEquity >= 15) score += 15;
     else if (metrics.returnOnEquity >= 10) score += 10;
     else {
@@ -125,42 +124,26 @@ const FinancialHealthCheck = () => {
       recommendations.push("Work on improving return on equity");
     }
 
-    // Working Capital Analysis
-    if (metrics.workingCapital > 0) score += 15;
-    else {
-      score += 5;
+    // Working Capital Analysis (15 points)
+    if (metrics.workingCapital > 0) {
+      if (metrics.currentRatio >= 2) score += 15;
+      else if (metrics.currentRatio >= 1.5) score += 10;
+      else score += 5;
+    } else {
       recommendations.push("Improve working capital management");
     }
 
     // Determine category
     let category;
-    if (score >= 80) category = 'Excellent';
-    else if (score >= 60) category = 'Good';
-    else if (score >= 40) category = 'Fair';
+    if (score >= 85) category = 'Excellent';
+    else if (score >= 70) category = 'Good';
+    else if (score >= 50) category = 'Fair';
     else category = 'Poor';
 
     setTimeout(() => {
       setHealthScore({ score, category, recommendations });
       setIsAnalyzing(false);
     }, 1500);
-  };
-
-  const formatCurrency = (amount) => {
-    return new Intl.NumberFormat('en-IN', {
-      style: 'currency',
-      currency: 'INR',
-      maximumFractionDigits: 0
-    }).format(amount);
-  };
-
-  const getScoreColor = (category) => {
-    switch (category) {
-      case 'Excellent': return 'text-green-600';
-      case 'Good': return 'text-blue-600';
-      case 'Fair': return 'text-yellow-600';
-      case 'Poor': return 'text-red-600';
-      default: return 'text-gray-600';
-    }
   };
 
   return (
@@ -202,6 +185,19 @@ const FinancialHealthCheck = () => {
             </div>
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-1">
+                Inventory (₹)
+              </label>
+              <input
+                type="number"
+                name="inventory"
+                value={financialData.inventory}
+                onChange={handleInputChange}
+                placeholder="e.g., 300000"
+                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-violet-500 focus:border-violet-500"
+              />
+            </div>
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">
                 Total Debt (₹)
               </label>
               <input
@@ -228,7 +224,7 @@ const FinancialHealthCheck = () => {
             </div>
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-1">
-                Annual Revenue (₹)
+                Revenue (₹)
               </label>
               <input
                 type="number"
@@ -249,6 +245,19 @@ const FinancialHealthCheck = () => {
                 value={financialData.netIncome}
                 onChange={handleInputChange}
                 placeholder="e.g., 800000"
+                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-violet-500 focus:border-violet-500"
+              />
+            </div>
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">
+                Operating Cash Flow (₹)
+              </label>
+              <input
+                type="number"
+                name="operatingCashFlow"
+                value={financialData.operatingCashFlow}
+                onChange={handleInputChange}
+                placeholder="e.g., 1200000"
                 className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-violet-500 focus:border-violet-500"
               />
             </div>
@@ -278,7 +287,7 @@ const FinancialHealthCheck = () => {
                   <Info className="h-5 w-5 text-violet-600" />
                 </div>
                 <div className="flex items-center gap-4">
-                  <div className="text-3xl font-bold text-violet-600">{healthScore.score}/90</div>
+                  <div className="text-3xl font-bold text-violet-600">{healthScore.score}/100</div>
                   <span className={`px-2 py-1 rounded-full text-sm font-medium ${getScoreColor(healthScore.category)}`}>
                     {healthScore.category}
                   </span>
