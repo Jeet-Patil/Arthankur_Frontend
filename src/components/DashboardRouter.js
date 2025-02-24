@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { Navigate } from 'react-router-dom';
 import Navbar from './Navbar';
+import TaxCompliance from './TaxCompliance';
 
 const DashboardRouter = () => {
     const [userType, setUserType] = useState(null);

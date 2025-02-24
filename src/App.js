@@ -7,6 +7,7 @@ import Register from './components/Register';
 import DashboardRouter from './components/DashboardRouter';
 import ProtectedRoute from './components/ProtectedRoute';
 import FinancialTools from './components/financial/FinancialTools';
+import TaxCompliance from './components/TaxCompliance';
 import './App.css';
 
 const App = () => {
@@ -82,6 +83,14 @@ const App = () => {
           element={
             <ProtectedRoute>
               <div>Compliance Page</div>
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/tax-compliance"
+          element={
+            <ProtectedRoute>
+              <TaxCompliance />
             </ProtectedRoute>
           }
         />
