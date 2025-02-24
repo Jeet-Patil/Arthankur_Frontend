@@ -1,0 +1,24 @@
+/* Add any additional custom styles here if needed */
+.min-h-screen {
+    min-height: 100vh;
+}
+
+.bg-gradient-to-r {
+    background: linear-gradient(to right, #7C3AED, #EC4899);
+}
+
+.shadow-lg {
+    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+}
+
+.bg-violet-100 {
+    background-color: #EDE9FE;
+}
+
+.text-violet-600 {
+    color: #7C3AED;
+}
+
+.rounded-lg {
+    border-radius: 0.5rem;
+} 
