@@ -26,6 +26,7 @@ const Login = () => {
             const response = await axios.post('http://localhost:5000/api/users/login', formData);
             if (response.data.token) {
                 localStorage.setItem('token', response.data.token);
+                localStorage.setItem('userType', response.data.userType);
                 toast.success('Login successful!');
                 
                 // Check if there's a redirect path stored

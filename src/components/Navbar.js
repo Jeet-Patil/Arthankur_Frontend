@@ -1,11 +1,12 @@
 import React from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 
-const Navbar = () => {
+const Navbar = ({ userType }) => {
     const navigate = useNavigate();
 
     const handleLogout = () => {
         localStorage.removeItem('token');
+        localStorage.removeItem('userType');
         navigate('/login');
     };
 
@@ -23,31 +24,28 @@ const Navbar = () => {
                         <Link to="/dashboard" className="text-gray-600 hover:text-violet-600 px-3 py-2">
                             Dashboard
                         </Link>
+                        {userType === 'startup' ? (
+                            <>
+                                <Link to="/loans" className="text-gray-600 hover:text-violet-600 px-3 py-2">
+                                    Loans
+                                </Link>
+                                <Link to="/schemes" className="text-gray-600 hover:text-violet-600 px-3 py-2">
+                                    Schemes
+                                </Link>
+                            </>
+                        ) : (
+                            <>
+                                <Link to="/investments" className="text-gray-600 hover:text-violet-600 px-3 py-2">
+                                    Investments
+                                </Link>
+                                <Link to="/portfolio" className="text-gray-600 hover:text-violet-600 px-3 py-2">
+                                    Portfolio
+                                </Link>
+                            </>
+                        )}
                         <Link to="/meetings" className="text-gray-600 hover:text-violet-600 px-3 py-2">
                             Meetings
                         </Link>
-                        <Link to="/loans" className="text-gray-600 hover:text-violet-600 px-3 py-2">
-                            Loans
-                        </Link>
-                        <Link to="/schemes" className="text-gray-600 hover:text-violet-600 px-3 py-2">
-                            Schemes
-                        </Link>
-                        <div className="relative group">
-                            <button className="text-gray-600 hover:text-violet-600 px-3 py-2">
-                                Tools
-                            </button>
-                            <div className="absolute right-0 w-48 py-2 mt-2 bg-white rounded-md shadow-xl hidden group-hover:block">
-                                <Link to="/financial-tools" className="block px-4 py-2 text-gray-800 hover:bg-violet-50">
-                                    Financial Calculator
-                                </Link>
-                                <Link to="/tax-filing" className="block px-4 py-2 text-gray-800 hover:bg-violet-50">
-                                    Tax Filing
-                                </Link>
-                                <Link to="/compliance" className="block px-4 py-2 text-gray-800 hover:bg-violet-50">
-                                    Compliance
-                                </Link>
-                            </div>
-                        </div>
                         <button
                             onClick={handleLogout}
                             className="bg-violet-600 text-white px-4 py-2 rounded-lg hover:bg-violet-700"
