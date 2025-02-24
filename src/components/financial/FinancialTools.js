@@ -1,66 +1,38 @@
 import React, { useState } from 'react';
-import Navbar from '../Navbar';
+import { PieChart, TrendingUp, Calculator, Wallet } from 'lucide-react';
 import LoanCalculator from './LoanCalculator';
+import FinancialHealthCheck from './FinancialHealthCheck';
+import Navbar from '../Navbar';
 
 const FinancialTools = () => {
-  const [selectedTool, setSelectedTool] = useState('loan-calculator'); // Set default tool
+  const [selectedTool, setSelectedTool] = useState('loan-calculator');
 
   const tools = [
     {
       id: 'loan-calculator',
-      icon: '💰',
+      icon: <Calculator className="h-6 w-6" />,
       title: 'Loan Calculator',
       description: 'Calculate EMIs, interest rates, and loan terms'
     },
     {
       id: 'financial-health',
-      icon: '📊',
+      icon: <PieChart className="h-6 w-6" />,
       title: 'Financial Health Check',
       description: 'Get an AI-powered analysis of your business finances'
     },
     {
       id: 'cash-flow',
-      icon: '📈',
+      icon: <TrendingUp className="h-6 w-6" />,
       title: 'Cash Flow Forecasting',
       description: 'Predict future cash flows using historical data'
     },
     {
       id: 'working-capital',
-      icon: '💳',
+      icon: <Wallet className="h-6 w-6" />,
       title: 'Working Capital Analysis',
       description: 'Optimize your working capital management'
     }
   ];
-
-  const renderTool = () => {
-    switch (selectedTool) {
-      case 'loan-calculator':
-        return <LoanCalculator />;
-      case 'financial-health':
-        return (
-          <div className="bg-white rounded-lg shadow-md p-6">
-            <h2 className="text-xl font-semibold mb-6">Financial Health Check</h2>
-            <p>Coming soon...</p>
-          </div>
-        );
-      case 'cash-flow':
-        return (
-          <div className="bg-white rounded-lg shadow-md p-6">
-            <h2 className="text-xl font-semibold mb-6">Cash Flow Forecasting</h2>
-            <p>Coming soon...</p>
-          </div>
-        );
-      case 'working-capital':
-        return (
-          <div className="bg-white rounded-lg shadow-md p-6">
-            <h2 className="text-xl font-semibold mb-6">Working Capital Analysis</h2>
-            <p>Coming soon...</p>
-          </div>
-        );
-      default:
-        return null;
-    }
-  };
 
   return (
     <div>
@@ -78,7 +50,7 @@ const FinancialTools = () => {
               onClick={() => setSelectedTool(tool.id)}
             >
               <div className="w-12 h-12 bg-violet-100 rounded-lg flex items-center justify-center mb-4">
-                <div className="text-2xl">{tool.icon}</div>
+                <div className="text-violet-600">{tool.icon}</div>
               </div>
               <h3 className="text-lg font-semibold mb-2">{tool.title}</h3>
               <p className="text-gray-600">{tool.description}</p>
@@ -87,7 +59,20 @@ const FinancialTools = () => {
         </div>
 
         <div className="mt-8">
-          {renderTool()}
+          {selectedTool === 'loan-calculator' && <LoanCalculator />}
+          {selectedTool === 'financial-health' && <FinancialHealthCheck />}
+          {selectedTool === 'cash-flow' && (
+            <div className="bg-white rounded-lg shadow-md p-6">
+              <h2 className="text-xl font-semibold mb-6">Cash Flow Forecasting</h2>
+              <p>Coming soon...</p>
+            </div>
+          )}
+          {selectedTool === 'working-capital' && (
+            <div className="bg-white rounded-lg shadow-md p-6">
+              <h2 className="text-xl font-semibold mb-6">Working Capital Analysis</h2>
+              <p>Coming soon...</p>
+            </div>
+          )}
         </div>
       </div>
     </div>
