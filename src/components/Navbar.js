@@ -21,31 +21,49 @@ const Navbar = ({ userType }) => {
                     </div>
 
                     <div className="flex items-center space-x-4">
-                        <Link to="/dashboard" className="text-gray-600 hover:text-violet-600 px-3 py-2">
-                            Dashboard
-                        </Link>
                         {userType === 'startup' ? (
                             <>
+                                <Link to="/funding" className="text-gray-600 hover:text-violet-600 px-3 py-2">
+                                    Funding
+                                </Link>
+                                <Link to="/meetings" className="text-gray-600 hover:text-violet-600 px-3 py-2">
+                                    Meetings
+                                </Link>
                                 <Link to="/loans" className="text-gray-600 hover:text-violet-600 px-3 py-2">
                                     Loans
+                                </Link>
+                                <Link to="/financial-tools" className="text-gray-600 hover:text-violet-600 px-3 py-2">
+                                    Financial Tools
+                                </Link>
+                                <Link to="/tax-compliance" className="text-gray-600 hover:text-violet-600 px-3 py-2">
+                                    Tax & Compliance
                                 </Link>
                                 <Link to="/schemes" className="text-gray-600 hover:text-violet-600 px-3 py-2">
                                     Schemes
                                 </Link>
+                                <Link to="/community" className="text-gray-600 hover:text-violet-600 px-3 py-2">
+                                    Community
+                                </Link>
                             </>
                         ) : (
                             <>
-                                <Link to="/investments" className="text-gray-600 hover:text-violet-600 px-3 py-2">
-                                    Investments
+                                <Link to="/funding" className="text-gray-600 hover:text-violet-600 px-3 py-2">
+                                    Funding
                                 </Link>
-                                <Link to="/portfolio" className="text-gray-600 hover:text-violet-600 px-3 py-2">
-                                    Portfolio
+                                <Link to="/meetings" className="text-gray-600 hover:text-violet-600 px-3 py-2">
+                                    Meetings
+                                </Link>
+                                <Link to="/virtual-pitch" className="text-gray-600 hover:text-violet-600 px-3 py-2">
+                                    Virtual Pitch
+                                </Link>
+                                <Link to="/community" className="text-gray-600 hover:text-violet-600 px-3 py-2">
+                                    Community
+                                </Link>
+                                <Link to="/explore-startups" className="text-gray-600 hover:text-violet-600 px-3 py-2">
+                                    Explore Startups
                                 </Link>
                             </>
                         )}
-                        <Link to="/meetings" className="text-gray-600 hover:text-violet-600 px-3 py-2">
-                            Meetings
-                        </Link>
                         <button
                             onClick={handleLogout}
                             className="bg-violet-600 text-white px-4 py-2 rounded-lg hover:bg-violet-700"
