@@ -27,7 +27,13 @@ const Login = () => {
             if (response.data.token) {
                 localStorage.setItem('token', response.data.token);
                 toast.success('Login successful!');
-                navigate('/dashboard');
+                
+                // Check if there's a redirect path stored
+                const redirectPath = localStorage.getItem('redirectPath');
+                localStorage.removeItem('redirectPath'); // Clean up
+                
+                // Navigate to the stored path or dashboard by default
+                navigate(redirectPath || '/dashboard');
             }
         } catch (error) {
             toast.error(error.response?.data?.message || 'Login failed');
