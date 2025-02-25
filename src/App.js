@@ -8,6 +8,7 @@ import DashboardRouter from './components/DashboardRouter';
 import ProtectedRoute from './components/ProtectedRoute';
 import FinancialTools from './components/financial/FinancialTools';
 import TaxCompliance from './components/TaxCompliance';
+import Funding from './components/Funding';
 import './App.css';
 
 const App = () => {
@@ -91,6 +92,14 @@ const App = () => {
           element={
             <ProtectedRoute>
               <TaxCompliance />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/funding"
+          element={
+            <ProtectedRoute>
+              <Funding />
             </ProtectedRoute>
           }
         />
