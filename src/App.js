@@ -10,6 +10,8 @@ import FinancialTools from './components/financial/FinancialTools';
 import TaxCompliance from './components/TaxCompliance';
 import Funding from './components/Funding';
 import Loans from './components/Loans';
+import Community from './components/Community';
+import Layout from './components/Layout';
 import './App.css';
 
 const App = () => {
@@ -101,6 +103,16 @@ const App = () => {
           element={
             <ProtectedRoute>
               <Funding />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/community"
+          element={
+            <ProtectedRoute>
+              <Layout>
+                <Community />
+              </Layout>
             </ProtectedRoute>
           }
         />
