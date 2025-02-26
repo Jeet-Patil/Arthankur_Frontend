@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 
 const LoanCalculator = () => {
   const [loanAmount, setLoanAmount] = useState('1000000');
@@ -6,7 +6,7 @@ const LoanCalculator = () => {
   const [tenure, setTenure] = useState('36');
   const [loanDetails, setLoanDetails] = useState(null);
 
-  const calculateLoan = () => {
+  const calculateLoan = useCallback(() => {
     const P = parseFloat(loanAmount);
     const R = parseFloat(interestRate) / 12 / 100;
     const N = parseFloat(tenure);
@@ -23,11 +23,11 @@ const LoanCalculator = () => {
       totalInterest,
       totalPayment
     });
-  };
+  }, [loanAmount, interestRate, tenure]);
 
   useEffect(() => {
     calculateLoan();
-  }, [loanAmount, interestRate, tenure]);
+  }, [calculateLoan]);
 
   const formatCurrency = (amount) => {
     return new Intl.NumberFormat('en-IN', {

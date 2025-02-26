@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 // Import icons for like/dislike
 import { FaThumbsUp, FaThumbsDown } from 'react-icons/fa';
+import { toast } from 'react-hot-toast';
 
 const Community = () => {
     const [posts, setPosts] = useState([]);
@@ -12,6 +13,8 @@ const Community = () => {
     const [userId, setUserId] = useState(null);
     const userType = localStorage.getItem('userType');
     const token = localStorage.getItem('token');
+    const [newComment, setNewComment] = useState('');
+    const [activeCommentPost, setActiveCommentPost] = useState(null);
 
     // Configure axios with default headers
     const axiosConfig = {
@@ -151,6 +154,28 @@ const Community = () => {
         return post.dislikes?.includes(userId);
     };
 
+    const handleCommentSubmit = async (postId) => {
+        try {
+            const response = await axios.post(
+                `http://localhost:5000/api/posts/${postId}/comments`,
+                { content: newComment },
+                axiosConfig
+            );
+            
+            // Update the posts state with the new comment
+            setPosts(posts.map(post => 
+                post._id === postId ? response.data : post
+            ));
+            
+            // Reset comment form
+            setNewComment('');
+            setActiveCommentPost(null);
+        } catch (error) {
+            console.error('Error posting comment:', error);
+            toast.error('Failed to post comment');
+        }
+    };
+
     return (
         <div className="max-w-7xl mx-auto px-4 py-8">
             <div className="grid grid-cols-3 gap-8">
@@ -228,6 +253,83 @@ const Community = () => {
                                         <span>{post.dislikes?.length || 0}</span>
                                     </button>
                                 </div>
+
+                                {/* Comments Section */}
+                                <div className="mt-4 border-t pt-4">
+                                    <div className="flex items-center justify-between mb-4">
+                                        <h4 className="text-sm font-semibold text-gray-700">
+                                            Comments ({post.comments?.length || 0})
+                                        </h4>
+                                        <button
+                                            onClick={() => setActiveCommentPost(post._id)}
+                                            className="text-sm text-violet-600 hover:text-violet-700"
+                                        >
+                                            Add Comment
+                                        </button>
+                                    </div>
+
+                                    {/* Comment Form */}
+                                    {activeCommentPost === post._id && (
+                                        <form 
+                                            onSubmit={(e) => {
+                                                e.preventDefault();
+                                                handleCommentSubmit(post._id);
+                                            }}
+                                            className="mb-4"
+                                        >
+                                            <textarea
+                                                value={newComment}
+                                                onChange={(e) => setNewComment(e.target.value)}
+                                                className="w-full p-2 border rounded-lg mb-2"
+                                                placeholder="Write your comment..."
+                                                rows="2"
+                                                required
+                                            />
+                                            <div className="flex justify-end space-x-2">
+                                                <button
+                                                    type="button"
+                                                    onClick={() => {
+                                                        setActiveCommentPost(null);
+                                                        setNewComment('');
+                                                    }}
+                                                    className="px-3 py-1 text-sm text-gray-600 hover:text-gray-800"
+                                                >
+                                                    Cancel
+                                                </button>
+                                                <button
+                                                    type="submit"
+                                                    className="px-3 py-1 text-sm bg-violet-600 text-white rounded-lg hover:bg-violet-700"
+                                                >
+                                                    Post Comment
+                                                </button>
+                                            </div>
+                                        </form>
+                                    )}
+
+                                    {/* Comments List */}
+                                    <div className="space-y-4">
+                                        {post.comments?.map((comment, index) => (
+                                            <div key={index} className="flex space-x-3">
+                                                <img
+                                                    src={getAvatarUrl(comment.author)}
+                                                    alt={`${comment.author?.name || 'Anonymous'}'s avatar`}
+                                                    className="w-8 h-8 rounded-full"
+                                                />
+                                                <div className="flex-1 bg-gray-50 rounded-lg p-3">
+                                                    <div className="flex items-center justify-between mb-1">
+                                                        <span className="text-sm font-medium">
+                                                            {comment.author?.name || 'Anonymous'}
+                                                        </span>
+                                                        <span className="text-xs text-gray-500">
+                                                            {new Date(comment.createdAt).toLocaleDateString()}
+                                                        </span>
+                                                    </div>
+                                                    <p className="text-sm text-gray-700">{comment.content}</p>
+                                                </div>
+                                            </div>
+                                        ))}
+                                    </div>
+                                </div>
                             </div>
                         ))}
                     </div>
@@ -275,25 +377,66 @@ const Community = () => {
                             </form>
                         )}
 
-                        <div className="space-y-4">
+                        {/* Communities List */}
+                        <div className="space-y-4 mt-6">
+                            <div className="flex justify-between items-center mb-2">
+                                <h3 className="text-lg font-semibold">Available Communities</h3>
+                                <span className="text-sm text-gray-500">{communities.length} communities</span>
+                            </div>
+                            
                             {communities.map((community) => (
-                                <div key={community._id} className="border rounded-lg p-4">
-                                    <h3 className="font-semibold mb-2">{community.name}</h3>
-                                    <p className="text-gray-600 text-sm mb-3">{community.description}</p>
-                                    <div className="flex items-center justify-between">
+                                <div key={community._id} 
+                                    className={`border rounded-lg p-4 transition-all ${
+                                        community.joined ? 'border-violet-500 bg-violet-50' : 'border-gray-200 hover:border-violet-500'
+                                    }`}
+                                >
+                                    <div className="flex items-center justify-between mb-2">
+                                        <h3 className="font-semibold text-lg">{community.name}</h3>
                                         <span className="text-sm text-gray-500">
                                             {community.members?.length || 0} members
                                         </span>
+                                    </div>
+                                    <p className="text-gray-600 text-sm mb-4">{community.description}</p>
+                                    <div className="flex items-center justify-between">
+                                        <div className="flex -space-x-2">
+                                            {/* Display member avatars (up to 3) */}
+                                            {[...Array(Math.min(3, community.members?.length || 0))].map((_, idx) => (
+                                                <div
+                                                    key={idx}
+                                                    className="w-8 h-8 rounded-full bg-violet-200 border-2 border-white flex items-center justify-center"
+                                                >
+                                                    <span className="text-xs text-violet-600">
+                                                        {String.fromCharCode(65 + idx)}
+                                                    </span>
+                                                </div>
+                                            ))}
+                                        </div>
                                         <button
                                             onClick={() => handleJoinCommunity(community._id)}
-                                            className={`px-4 py-2 rounded-lg text-sm ${
+                                            className={`px-4 py-2 rounded-lg text-sm transition-colors ${
                                                 community.joined
-                                                    ? 'bg-gray-200 text-gray-700 hover:bg-gray-300'
+                                                    ? 'bg-gray-100 text-gray-700 hover:bg-gray-200'
                                                     : 'bg-violet-600 text-white hover:bg-violet-700'
                                             }`}
                                         >
-                                            {community.joined ? 'Joined' : 'Join'}
+                                            {community.joined ? 'Leave Community' : 'Join Community'}
                                         </button>
+                                    </div>
+                                    
+                                    {/* Community Stats */}
+                                    <div className="grid grid-cols-3 gap-4 mt-4 pt-4 border-t">
+                                        <div className="text-center">
+                                            <p className="text-sm text-gray-500">Posts</p>
+                                            <p className="font-semibold">{community.posts?.length || 0}</p>
+                                        </div>
+                                        <div className="text-center">
+                                            <p className="text-sm text-gray-500">Discussions</p>
+                                            <p className="font-semibold">{community.discussions?.length || 0}</p>
+                                        </div>
+                                        <div className="text-center">
+                                            <p className="text-sm text-gray-500">Active</p>
+                                            <p className="font-semibold text-green-600">Now</p>
+                                        </div>
                                     </div>
                                 </div>
                             ))}
