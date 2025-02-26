@@ -87,6 +87,15 @@ const Register = () => {
                 <form onSubmit={handleSubmit} className="space-y-4">
                     {/* Common fields */}
                     <input
+                                type="text"
+                                name="name"
+                                placeholder="Full Name"
+                                value={formData.name}
+                                onChange={handleChange}
+                                className="w-full px-4 py-2 rounded-lg border focus:outline-none focus:ring-2 focus:ring-violet-500"
+                                required
+                    />
+                    <input
                         type="email"
                         name="email"
                         placeholder="Email Address"
@@ -123,6 +132,7 @@ const Register = () => {
                         required
                     />
 
+
                     {/* Conditional fields based on user type */}
                     {userType === 'startup' ? (
                         <>
@@ -155,15 +165,7 @@ const Register = () => {
                         </>
                     ) : (
                         <>
-                            <input
-                                type="text"
-                                name="name"
-                                placeholder="Full Name"
-                                value={formData.name}
-                                onChange={handleChange}
-                                className="w-full px-4 py-2 rounded-lg border focus:outline-none focus:ring-2 focus:ring-violet-500"
-                                required
-                            />
+                            
                             <select
                                 name="investmentExperience"
                                 value={formData.investmentExperience}
