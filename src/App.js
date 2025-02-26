@@ -9,6 +9,7 @@ import ProtectedRoute from './components/ProtectedRoute';
 import FinancialTools from './components/financial/FinancialTools';
 import TaxCompliance from './components/TaxCompliance';
 import Funding from './components/Funding';
+import Loans from './components/Loans';
 import './App.css';
 
 const App = () => {
@@ -59,7 +60,7 @@ const App = () => {
           path="/loans"
           element={
             <ProtectedRoute>
-              <div>Loans Page</div>
+              <Loans />
             </ProtectedRoute>
           }
         />
