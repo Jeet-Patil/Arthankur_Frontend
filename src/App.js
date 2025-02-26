@@ -17,112 +17,111 @@ import './App.css';
 const App = () => {
   return (
     <Router>
-      <Toaster
-        position="top-center"
-        toastOptions={{
-          duration: 3000,
-          style: {
-            background: '#333',
-            color: '#fff',
-          },
-        }}
-      />
-      <Routes>
-        {/* Public Routes */}
-        <Route path="/" element={<Landing />} />
-        <Route path="/login" element={<Login />} />
-        <Route path="/register" element={<Register />} />
-        
-        {/* Protected Routes */}
-        <Route
-          path="/dashboard/*"
-          element={
-            <ProtectedRoute>
-              <DashboardRouter />
-            </ProtectedRoute>
-          }
+      <Layout>
+        <Toaster
+          position="top-center"
+          toastOptions={{
+            duration: 3000,
+            style: {
+              background: '#333',
+              color: '#fff',
+            },
+          }}
         />
-        <Route
-          path="/financial-tools"
-          element={
-            <ProtectedRoute>
-              <FinancialTools />
-            </ProtectedRoute>
-          }
-        />
-        <Route
-          path="/meetings"
-          element={
-            <ProtectedRoute>
-              <div>Meetings Page</div>
-            </ProtectedRoute>
-          }
-        />
-        <Route
-          path="/loans"
-          element={
-            <ProtectedRoute>
-              <Loans />
-            </ProtectedRoute>
-          }
-        />
-        <Route
-          path="/schemes"
-          element={
-            <ProtectedRoute>
-              <div>Schemes Page</div>
-            </ProtectedRoute>
-          }
-        />
-        <Route
-          path="/tax-filing"
-          element={
-            <ProtectedRoute>
-              <div>Tax Filing Page</div>
-            </ProtectedRoute>
-          }
-        />
-        <Route
-          path="/compliance"
-          element={
-            <ProtectedRoute>
-              <div>Compliance Page</div>
-            </ProtectedRoute>
-          }
-        />
-        <Route
-          path="/tax-compliance"
-          element={
-            <ProtectedRoute>
-              <TaxCompliance />
-            </ProtectedRoute>
-          }
-        />
-        <Route
-          path="/funding"
-          element={
-            <ProtectedRoute>
-              <Funding />
-            </ProtectedRoute>
-          }
-        />
-        <Route
-          path="/community"
-          element={
-            <ProtectedRoute>
-              <Layout>
+        <Routes>
+          {/* Public Routes */}
+          <Route path="/" element={<Landing />} />
+          <Route path="/login" element={<Login />} />
+          <Route path="/register" element={<Register />} />
+          
+          {/* Protected Routes */}
+          <Route
+            path="/dashboard/*"
+            element={
+              <ProtectedRoute>
+                <DashboardRouter />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/financial-tools"
+            element={
+              <ProtectedRoute>
+                <FinancialTools />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/meetings"
+            element={
+              <ProtectedRoute>
+                <div>Meetings Page</div>
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/loans"
+            element={
+              <ProtectedRoute>
+                <Loans />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/schemes"
+            element={
+              <ProtectedRoute>
+                <div>Schemes Page</div>
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/tax-filing"
+            element={
+              <ProtectedRoute>
+                <div>Tax Filing Page</div>
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/compliance"
+            element={
+              <ProtectedRoute>
+                <div>Compliance Page</div>
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/tax-compliance"
+            element={
+              <ProtectedRoute>
+                <TaxCompliance />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/funding"
+            element={
+              <ProtectedRoute>
+                <Funding />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/community"
+            element={
+              <ProtectedRoute>
                 <Community />
-              </Layout>
-            </ProtectedRoute>
-          }
-        />
-        
-        {/* Catch all route */}
-        <Route path="*" element={<Navigate to="/" replace />} />
-      </Routes>
+              </ProtectedRoute>
+            }
+          />
+          
+          {/* Catch all route */}
+          <Route path="*" element={<Navigate to="/" replace />} />
+        </Routes>
+      </Layout>
     </Router>
   );
 };
 
 export default App;
-                                                                                                                                                                                                                                                        
