@@ -1,13 +1,27 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { Link, useNavigate, useLocation } from 'react-router-dom';
+import { jwtDecode } from 'jwt-decode';
 
-const Navbar = ({ userType }) => {
+const Navbar = () => {
     const navigate = useNavigate();
     const location = useLocation();
+    const [userType, setUserType] = useState(null);
+    const [isOpen, setIsOpen] = useState(false);
+
+    useEffect(() => {
+        const token = localStorage.getItem('token');
+        if (token) {
+            try {
+                const decoded = jwtDecode(token);
+                setUserType(decoded.userType);
+            } catch (error) {
+                console.error('Error decoding token:', error);
+            }
+        }
+    }, []);
 
     const handleLogout = () => {
         localStorage.removeItem('token');
-        localStorage.removeItem('userType');
         navigate('/login');
     };
 
@@ -25,6 +39,31 @@ const Navbar = ({ userType }) => {
         }`;
     };
 
+    const toggleMenu = () => {
+        setIsOpen(!isOpen);
+    };
+
+    const startupNavLinks = [
+        { path: '/dashboard', label: 'Dashboard' },
+        { path: '/funding', label: 'Funding' },
+        { path: '/meetings', label: 'Meetings' },
+        { path: '/loans', label: 'Loans' },
+        { path: '/financial-tools', label: 'Financial Tools' },
+        { path: '/tax-compliance', label: 'Tax & Compliance' },
+        { path: '/schemes', label: 'Schemes' },
+        { path: '/community', label: 'Community' }
+    ];
+
+    const investorNavLinks = [
+        { path: '/dashboard', label: 'Dashboard' },
+        { path: '/meetings', label: 'Meetings' },
+        { path: '/virtual-pitch', label: 'Virtual Pitch' },
+        { path: '/community', label: 'Community' },
+        { path: '/explore-startups', label: 'Explore Startups' }
+    ];
+
+    const navLinks = userType === 'startup' ? startupNavLinks : investorNavLinks;
+
     return (
         <nav className="bg-white shadow-lg">
             <div className="max-w-7xl mx-auto px-4">
@@ -35,61 +74,65 @@ const Navbar = ({ userType }) => {
                         </Link>
                     </div>
 
-                    <div className="flex items-center space-x-4">
-                        {userType === 'startup' ? (
-                            <>
-                                <Link to="/funding" className={getLinkClassName('/funding')}>
-                                    Funding
-                                </Link>
-                                <Link to="/meetings" className={getLinkClassName('/meetings')}>
-                                    Meetings
-                                </Link>
-                                <Link to="/loans" className={getLinkClassName('/loans')}>
-                                    Loans
-                                </Link>
-                                <Link to="/financial-tools" className={getLinkClassName('/financial-tools')}>
-                                    Financial Tools
-                                </Link>
-                                <Link to="/tax-compliance" className={getLinkClassName('/tax-compliance')}>
-                                    Tax & Compliance
-                                </Link>
-                                <Link to="/schemes" className={getLinkClassName('/schemes')}>
-                                    Schemes
-                                </Link>
-                                <Link to="/community" className={getLinkClassName('/community')}>
-                                    Community
-                                </Link>
-                            </>
-                        ) : (
-                            <>
-                                <Link to="/funding" className={getLinkClassName('/funding')}>
-                                    Funding
-                                </Link>
-                                <Link to="/meetings" className={getLinkClassName('/meetings')}>
-                                    Meetings
-                                </Link>
-                                <Link to="/virtual-pitch" className={getLinkClassName('/virtual-pitch')}>
-                                    Virtual Pitch
-                                </Link>
-                                <Link to="/community" className={getLinkClassName('/community')}>
-                                    Community
-                                </Link>
-                                <Link to="/explore-startups" className={getLinkClassName('/explore-startups')}>
-                                    Explore Startups
-                                </Link>
-                            </>
-                        )}
+                    {/* Mobile menu button */}
+                    <div className="flex items-center md:hidden">
+                        <button onClick={toggleMenu} className="text-gray-600 hover:text-violet-600">
+                            <svg className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                {isOpen ? (
+                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                                ) : (
+                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
+                                )}
+                            </svg>
+                        </button>
+                    </div>
+
+                    {/* Desktop Navigation */}
+                    <div className="hidden md:flex items-center space-x-4">
+                        {userType && navLinks.map((link) => (
+                            <Link 
+                                key={link.path} 
+                                to={link.path} 
+                                className={getLinkClassName(link.path)}
+                            >
+                                {link.label}
+                            </Link>
+                        ))}
                         <button
                             onClick={handleLogout}
-                            className="bg-violet-600 text-white px-4 py-2 rounded-lg hover:bg-violet-700"
+                            className="bg-violet-600 text-white px-4 py-2 rounded-lg hover:bg-violet-700 ml-4"
                         >
                             Logout
                         </button>
                     </div>
                 </div>
             </div>
+
+            {/* Mobile Navigation */}
+            {isOpen && (
+                <div className="md:hidden bg-white pb-4 px-4">
+                    <div className="flex flex-col space-y-2">
+                        {userType && navLinks.map((link) => (
+                            <Link
+                                key={link.path}
+                                to={link.path}
+                                className={`block py-2 px-4 rounded ${isActiveLink(link.path) ? 'bg-violet-100 text-violet-600' : 'text-gray-600'}`}
+                                onClick={() => setIsOpen(false)}
+                            >
+                                {link.label}
+                            </Link>
+                        ))}
+                        <button
+                            onClick={handleLogout}
+                            className="bg-violet-600 text-white px-4 py-2 rounded-lg hover:bg-violet-700 mt-2"
+                        >
+                            Logout
+                        </button>
+                    </div>
+                </div>
+            )}
         </nav>
     );
 };
 
-export default Navbar; 
+export default Navbar;

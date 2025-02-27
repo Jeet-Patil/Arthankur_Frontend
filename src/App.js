@@ -14,6 +14,12 @@ import Community from './components/Community';
 import Layout from './components/Layout';
 import './App.css';
 
+// These will be created later or already exist
+import VirtualPitch from './components/investor/VirtualPitch';
+import ExploreStartups from './components/investor/ExploreStartups';
+import Schemes from './components/startup/Schemes';
+import Meetings from './components/Meetings';
+
 const App = () => {
   return (
     <Router>
@@ -34,7 +40,7 @@ const App = () => {
           <Route path="/login" element={<Login />} />
           <Route path="/register" element={<Register />} />
           
-          {/* Protected Routes */}
+          {/* Protected Routes for both user types */}
           <Route
             path="/dashboard/*"
             element={
@@ -43,75 +49,86 @@ const App = () => {
               </ProtectedRoute>
             }
           />
-          <Route
-            path="/financial-tools"
-            element={
-              <ProtectedRoute>
-                <FinancialTools />
-              </ProtectedRoute>
-            }
-          />
+          
           <Route
             path="/meetings"
             element={
               <ProtectedRoute>
-                <div>Meetings Page</div>
+                <Meetings />
               </ProtectedRoute>
             }
           />
-          <Route
-            path="/loans"
-            element={
-              <ProtectedRoute>
-                <Loans />
-              </ProtectedRoute>
-            }
-          />
-          <Route
-            path="/schemes"
-            element={
-              <ProtectedRoute>
-                <div>Schemes Page</div>
-              </ProtectedRoute>
-            }
-          />
-          <Route
-            path="/tax-filing"
-            element={
-              <ProtectedRoute>
-                <div>Tax Filing Page</div>
-              </ProtectedRoute>
-            }
-          />
-          <Route
-            path="/compliance"
-            element={
-              <ProtectedRoute>
-                <div>Compliance Page</div>
-              </ProtectedRoute>
-            }
-          />
-          <Route
-            path="/tax-compliance"
-            element={
-              <ProtectedRoute>
-                <TaxCompliance />
-              </ProtectedRoute>
-            }
-          />
-          <Route
-            path="/funding"
-            element={
-              <ProtectedRoute>
-                <Funding />
-              </ProtectedRoute>
-            }
-          />
+          
           <Route
             path="/community"
             element={
               <ProtectedRoute>
                 <Community />
+              </ProtectedRoute>
+            }
+          />
+          
+          {/* Startup Only Routes */}
+          <Route
+            path="/financial-tools"
+            element={
+              <ProtectedRoute allowedUserTypes={['startup']}>
+                <FinancialTools />
+              </ProtectedRoute>
+            }
+          />
+          
+          <Route
+            path="/loans"
+            element={
+              <ProtectedRoute allowedUserTypes={['startup']}>
+                <Loans />
+              </ProtectedRoute>
+            }
+          />
+          
+          <Route
+            path="/schemes"
+            element={
+              <ProtectedRoute allowedUserTypes={['startup']}>
+                <Schemes />
+              </ProtectedRoute>
+            }
+          />
+          
+          <Route
+            path="/tax-compliance"
+            element={
+              <ProtectedRoute allowedUserTypes={['startup']}>
+                <TaxCompliance />
+              </ProtectedRoute>
+            }
+          />
+          
+          <Route
+            path="/funding"
+            element={
+              <ProtectedRoute allowedUserTypes={['startup']}>
+                <Funding />
+              </ProtectedRoute>
+            }
+          />
+          
+          {/* Investor Only Routes */}
+          <Route
+            path="/virtual-pitch"
+            element={
+              <ProtectedRoute allowedUserTypes={['investor']}>
+                <VirtualPitch />
+              </ProtectedRoute>
+            }
+          />
+          
+          <Route
+            path="/explore-startups"
+            element={
+              <ProtectedRoute allowedUserTypes={['investor']}>
+                <ExploreStartups />
               </ProtectedRoute>
             }
           />
