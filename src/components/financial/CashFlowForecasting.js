@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { TrendingUp, Info, ArrowUp, ArrowDown, Save, List, Plus } from 'lucide-react';
+import { TrendingUp, ArrowUp, ArrowDown, Save, List } from 'lucide-react';
 import { saveCashFlowForecast, getCashFlowForecasts, getCashFlowForecast, deleteCashFlowForecast } from '../../services/api';
 import { toast } from 'react-hot-toast';
 
@@ -7,9 +7,6 @@ const CashFlowForecasting = () => {
   const [historicalData, setHistoricalData] = useState({
     revenue: '',
     expenses: '',
-    accountsReceivable: '',
-    accountsPayable: '',
-    inventory: '',
     operatingExpenses: '',
     capitalExpenditures: '',
   });
@@ -58,9 +55,6 @@ const CashFlowForecasting = () => {
       const {
         revenue,
         expenses,
-        accountsReceivable,
-        accountsPayable,
-        inventory,
         operatingExpenses,
         capitalExpenditures
       } = historicalData;

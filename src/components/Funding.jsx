@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { toast } from 'react-hot-toast';
 import { Plus, DollarSign, Users, Calendar, PieChart } from 'lucide-react';
 import Navbar from './Navbar';
+import { acceptFundingInterest } from '../services/api';
 
 const Funding = () => {
   const [showForm, setShowForm] = useState(false);
@@ -31,6 +32,8 @@ const Funding = () => {
       rejected: 0
     }
   });
+  const [editMode, setEditMode] = useState(false);
+  const [currentFundingId, setCurrentFundingId] = useState(null);
 
   // Get userType from localStorage
   const userType = localStorage.getItem('userType');
@@ -72,8 +75,8 @@ const Funding = () => {
 
       console.log('Making request to backend...'); // Debug log
 
-      const response = await fetch('http://localhost:5000/api/funding', {
-        method: 'POST',
+      const response = await fetch(editMode ? `http://localhost:5000/api/funding/${currentFundingId}` : 'http://localhost:5000/api/funding', {
+        method: editMode ? 'PATCH' : 'POST',
         headers: {
           'Authorization': `Bearer ${token}`
         },
@@ -87,7 +90,7 @@ const Funding = () => {
         throw new Error(data.error || 'Failed to submit funding request');
       }
 
-      toast.success('Funding request submitted successfully!');
+      toast.success(editMode ? 'Funding request updated successfully!' : 'Funding request submitted successfully!');
       setShowForm(false);
       // Reset form
       setFormData({
@@ -104,6 +107,8 @@ const Funding = () => {
         accountHolderName: '',
         attachments: []
       });
+      setEditMode(false);
+      setCurrentFundingId(null);
 
       // Refresh the data
       fetchFundingRequests();
@@ -130,6 +135,7 @@ const Funding = () => {
 
       const data = await response.json();
       setFundingRequests(data);
+      console.log("Funding requests with interests:", data);
     } catch (error) {
       console.error('Error fetching funding requests:', error);
       toast.error('Failed to load funding requests');
@@ -153,7 +159,7 @@ const Funding = () => {
       setDashboardStats({
         totalFunding: `₹${data.totalFundingRequested.toLocaleString()}`,
         activeRequests: data.totalRequests,
-        investorInterest: 0, // You'll need to implement this
+        investorInterest: data.totalInterests || 0, // Updated to show total interests
         scheduledMeetings: 0, // You'll need to implement this
         statusOverview: {
           inProgress: data.inProgress,
@@ -164,6 +170,72 @@ const Funding = () => {
     } catch (error) {
       console.error('Error fetching dashboard stats:', error);
       toast.error('Failed to load dashboard statistics');
+    }
+  };
+
+  // Add a function to handle accepting investor interest
+  const handleAcceptInterest = async (fundingId, interestId) => {
+    try {
+      await acceptFundingInterest(fundingId, interestId);
+      toast.success('Investor interest accepted successfully!');
+      
+      // Refresh the data
+      fetchFundingRequests();
+      fetchDashboardStats();
+    } catch (error) {
+      console.error('Error accepting interest:', error);
+      toast.error('Failed to accept investor interest');
+    }
+  };
+
+  // Add this function to handle editing a funding request
+  const handleEditFunding = (funding) => {
+    setFormData({
+      title: funding.title,
+      type: funding.type,
+      minAmount: funding.minAmount,
+      maxAmount: funding.maxAmount,
+      startDate: new Date(funding.startDate).toISOString().split('T')[0],
+      endDate: new Date(funding.endDate).toISOString().split('T')[0],
+      description: funding.description,
+      bankName: funding.bankDetails.bankName,
+      accountNumber: funding.bankDetails.accountNumber,
+      ifscCode: funding.bankDetails.ifscCode,
+      accountHolderName: funding.bankDetails.accountHolderName,
+      attachments: []
+    });
+    setEditMode(true);
+    setCurrentFundingId(funding._id);
+    setShowForm(true);
+    window.scrollTo(0, 0);
+  };
+
+  // Add this function to handle deleting a funding request
+  const handleDeleteFunding = async (fundingId) => {
+    if (!window.confirm('Are you sure you want to delete this funding request?')) {
+      return;
+    }
+
+    try {
+      const token = localStorage.getItem('token');
+      const response = await fetch(`http://localhost:5000/api/funding/${fundingId}`, {
+        method: 'DELETE',
+        headers: {
+          'Authorization': `Bearer ${token}`
+        }
+      });
+
+      if (!response.ok) {
+        throw new Error('Failed to delete funding request');
+      }
+
+      toast.success('Funding request deleted successfully');
+      // Refresh the list
+      fetchFundingRequests();
+      fetchDashboardStats();
+    } catch (error) {
+      console.error('Error deleting funding request:', error);
+      toast.error('Failed to delete funding request');
     }
   };
 
@@ -270,62 +342,124 @@ const Funding = () => {
             {/* Recent Funding Requests */}
             <div className="bg-white p-6 rounded-lg shadow-md">
               <h2 className="text-lg font-semibold mb-4">Recent Funding Requests</h2>
-              <div className="overflow-x-auto">
-                <table className="min-w-full divide-y divide-gray-200">
-                  <thead className="bg-gray-50">
-                    <tr>
-                      <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                        Title
-                      </th>
-                      <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                        Amount
-                      </th>
-                      <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                        Type
-                      </th>
-                      <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                        Status
-                      </th>
-                      <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                        Date
-                      </th>
-                    </tr>
-                  </thead>
-                  <tbody className="bg-white divide-y divide-gray-200">
-                    {fundingRequests.map((request) => (
-                      <tr key={request._id}>
-                        <td className="px-6 py-4 whitespace-nowrap">
-                          <div className="text-sm font-medium text-gray-900">{request.title}</div>
-                        </td>
-                        <td className="px-6 py-4 whitespace-nowrap">
-                          <div className="text-sm text-gray-500">₹{request.maxAmount.toLocaleString()}</div>
-                        </td>
-                        <td className="px-6 py-4 whitespace-nowrap">
-                          <div className="text-sm text-gray-500">{request.type}</div>
-                        </td>
-                        <td className="px-6 py-4 whitespace-nowrap">
-                          <span className={`px-2 inline-flex text-xs leading-5 font-semibold rounded-full ${
-                            request.status === 'pending' ? 'bg-yellow-100 text-yellow-800' :
-                            request.status === 'approved' ? 'bg-green-100 text-green-800' :
-                            request.status === 'rejected' ? 'bg-red-100 text-red-800' :
-                            'bg-gray-100 text-gray-800'
-                          }`}>
-                            {request.status.charAt(0).toUpperCase() + request.status.slice(1)}
+              <div className="mt-8 grid grid-cols-1 gap-6">
+                {fundingRequests.map((request) => (
+                  <div key={request._id} className="bg-white p-6 rounded-lg shadow-md">
+                    <div className="flex flex-col md:flex-row justify-between">
+                      <div>
+                        <h3 className="text-xl font-semibold mb-2">{request.title}</h3>
+                        <div className="flex flex-wrap gap-2 mb-3">
+                          <span className="bg-indigo-100 text-indigo-800 px-3 py-1 rounded-full text-sm">
+                            {request.type.charAt(0).toUpperCase() + request.type.slice(1)}
                           </span>
-                        </td>
-                        <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                          {new Date(request.createdAt).toLocaleDateString()}
-                        </td>
-                      </tr>
-                    ))}
-                  </tbody>
-                </table>
+                          <span className={`px-3 py-1 rounded-full text-sm ${
+                            request.status === 'pending' ? 'bg-yellow-100 text-yellow-800' :
+                            request.status === 'in_progress' ? 'bg-blue-100 text-blue-800' :
+                            request.status === 'approved' ? 'bg-green-100 text-green-800' :
+                            'bg-red-100 text-red-800'
+                          }`}>
+                            {request.status === 'pending' ? 'Pending' :
+                             request.status === 'in_progress' ? 'In Progress' :
+                             request.status === 'approved' ? 'Approved' :
+                             'Rejected'}
+                          </span>
+                        </div>
+                        
+                        <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-4">
+                          <div>
+                            <p className="text-sm text-gray-500">Min Amount</p>
+                            <p className="font-semibold">₹{request.minAmount.toLocaleString()}</p>
+                          </div>
+                          <div>
+                            <p className="text-sm text-gray-500">Max Amount</p>
+                            <p className="font-semibold">₹{request.maxAmount.toLocaleString()}</p>
+                          </div>
+                          <div>
+                            <p className="text-sm text-gray-500">Start Date</p>
+                            <p className="font-semibold">{new Date(request.startDate).toLocaleDateString()}</p>
+                          </div>
+                          <div>
+                            <p className="text-sm text-gray-500">End Date</p>
+                            <p className="font-semibold">{new Date(request.endDate).toLocaleDateString()}</p>
+                          </div>
+                        </div>
+                        
+                        <p className="text-gray-700 mb-4">{request.description}</p>
+                      </div>
+                    </div>
+                    
+                    {/* Investor Interest Section */}
+                    {request.interests && request.interests.length > 0 && (
+                      <div className="mt-4 pt-4 border-t border-gray-200">
+                        <h4 className="text-lg font-semibold mb-3">Investor Interests ({request.interests.length})</h4>
+                        <div className="space-y-4">
+                          {request.interests.map((interest, i) => (
+                            <div key={i} className="bg-gray-50 p-4 rounded-lg">
+                              <div className="flex justify-between mb-2">
+                                <span className="font-medium">{interest.name}</span>
+                                <span className="text-sm text-gray-500">{new Date(interest.date).toLocaleDateString()}</span>
+                              </div>
+                              <p className="text-gray-700">{interest.email}</p>
+                              {interest.message && (
+                                <p className="mt-2 text-gray-600 italic">"{interest.message}"</p>
+                              )}
+                              <div className="mt-3 flex space-x-3">
+                                <button 
+                                  className="bg-indigo-600 text-white px-4 py-2 rounded hover:bg-indigo-700 text-sm"
+                                  onClick={() => window.location.href = `mailto:${interest.email}`}
+                                >
+                                  Contact Investor
+                                </button>
+                                
+                                {interest.status === 'pending' && (
+                                  <button 
+                                    className="bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700 text-sm"
+                                    onClick={() => handleAcceptInterest(request._id, interest._id)}
+                                  >
+                                    Accept Interest
+                                  </button>
+                                )}
+                                
+                                {interest.status === 'accepted' && (
+                                  <span className="bg-green-100 text-green-800 px-4 py-2 rounded text-sm inline-flex items-center">
+                                    Accepted
+                                  </span>
+                                )}
+                                
+                                {interest.status === 'rejected' && (
+                                  <span className="bg-red-100 text-red-800 px-4 py-2 rounded text-sm inline-flex items-center">
+                                    Rejected
+                                  </span>
+                                )}
+                              </div>
+                            </div>
+                          ))}
+                        </div>
+                      </div>
+                    )}
+                    
+                    <div className="mt-4 pt-4 border-t border-gray-200 flex justify-end space-x-4">
+                      <button 
+                        className="bg-gray-200 hover:bg-gray-300 text-gray-800 px-4 py-2 rounded-md transition"
+                        onClick={() => handleEditFunding(request)}
+                      >
+                        Edit
+                      </button>
+                      <button 
+                        className="bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded-md transition"
+                        onClick={() => handleDeleteFunding(request._id)}
+                      >
+                        Delete
+                      </button>
+                    </div>
+                  </div>
+                ))}
               </div>
             </div>
           </div>
         ) : (
           <div className="bg-white p-6 rounded-lg shadow-md">
-            <h2 className="text-2xl font-bold mb-6">Create Funding Request</h2>
+            <h2 className="text-2xl font-bold mb-6">{editMode ? 'Edit Funding Request' : 'Create Funding Request'}</h2>
             <form onSubmit={handleSubmit} className="space-y-6">
               {/* Basic Details */}
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -531,7 +665,7 @@ const Funding = () => {
                   type="submit"
                   className="px-4 py-2 bg-indigo-600 text-white rounded-md hover:bg-indigo-700"
                 >
-                  Submit Request
+                  {editMode ? 'Update Request' : 'Submit Request'}
                 </button>
               </div>
             </form>
@@ -542,4 +676,4 @@ const Funding = () => {
   );
 };
 
-export default Funding; 
+export default Funding;

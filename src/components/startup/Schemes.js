@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import Navbar from '../Navbar';
 import EligibilityCheck from './EligibilityCheck';
 import EligibilityResults from './EligibilityResults';
@@ -12,11 +12,7 @@ const Schemes = () => {
     const [showResults, setShowResults] = useState(false);
     const [eligibilityResults, setEligibilityResults] = useState([]);
 
-    useEffect(() => {
-        filterSchemes();
-    }, [searchTerm, category]);
-
-    const filterSchemes = () => {
+    const filterSchemes = useCallback(() => {
         let filteredSchemes = governmentSchemes;
 
         if (searchTerm) {
@@ -28,8 +24,6 @@ const Schemes = () => {
         }
 
         if (category) {
-            // This is a simple category matching example
-            // In a real app, you would have more sophisticated categorization
             filteredSchemes = filteredSchemes.filter(scheme => {
                 if (category === 'financial') return scheme.description.toLowerCase().includes('financial') || scheme.description.toLowerCase().includes('fund');
                 if (category === 'tax') return scheme.description.toLowerCase().includes('tax');
@@ -41,7 +35,11 @@ const Schemes = () => {
         }
 
         setSchemes(filteredSchemes);
-    };
+    }, [searchTerm, category]);
+
+    useEffect(() => {
+        filterSchemes();
+    }, [filterSchemes]);
 
     const handleEligibilityCheck = (formData) => {
         const matchingSchemes = governmentSchemes.filter(scheme => {

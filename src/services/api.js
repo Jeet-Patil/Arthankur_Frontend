@@ -188,3 +188,55 @@ export const deleteWorkingCapitalAnalysis = async (id) => {
         throw error.response?.data || { error: 'Failed to delete working capital analysis' };
     }
 };
+
+// Investor APIs
+export const getAllFundingRequests = async () => {
+    try {
+        const response = await axios.get('http://localhost:5000/api/funding/all', getAuthHeader());
+        return response.data;
+    } catch (error) {
+        console.error('Error fetching funding requests:', error);
+        throw error.response?.data || { error: 'Failed to fetch funding requests' };
+    }
+};
+
+// Get a specific funding request by ID
+export const getFundingRequestById = async (id) => {
+    try {
+        const response = await axios.get(`http://localhost:5000/api/funding/${id}`, getAuthHeader());
+        return response.data;
+    } catch (error) {
+        console.error('Error fetching funding request:', error);
+        throw error.response?.data || { error: 'Failed to fetch funding request details' };
+    }
+};
+
+// Express interest in a funding request
+export const expressFundingInterest = async (id, message = '') => {
+    try {
+        const response = await axios.post(
+            `http://localhost:5000/api/funding/${id}/interest`, 
+            { message }, 
+            getAuthHeader()
+        );
+        return response.data;
+    } catch (error) {
+        console.error('Error expressing interest:', error);
+        throw error.response?.data || { error: 'Failed to express interest in funding request' };
+    }
+};
+
+// Accept investor interest in a funding request
+export const acceptFundingInterest = async (fundingId, interestId) => {
+    try {
+        const response = await axios.post(
+            `http://localhost:5000/api/funding/${fundingId}/accept-interest/${interestId}`,
+            {},
+            getAuthHeader()
+        );
+        return response.data;
+    } catch (error) {
+        console.error('Error accepting interest:', error);
+        throw error.response?.data || { error: 'Failed to accept investor interest' };
+    }
+};

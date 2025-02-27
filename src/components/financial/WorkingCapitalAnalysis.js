@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Wallet, Info, TrendingUp, TrendingDown, Save, List } from 'lucide-react';
+import { Wallet, Info, Save, List } from 'lucide-react';
 import { saveWorkingCapitalAnalysis, getWorkingCapitalAnalyses, getWorkingCapitalAnalysis, deleteWorkingCapitalAnalysis } from '../../services/api';
 import { toast } from 'react-hot-toast';
 
@@ -77,7 +77,7 @@ const WorkingCapitalAnalysis = () => {
       const ar = parseFloat(accountsReceivable) || 0;
       const ap = parseFloat(accountsPayable) || 0;
       const cash = parseFloat(cashAndEquivalents) || 0;
-      const std = parseFloat(shortTermDebt) || 0;
+      const shortTermDebtValue = parseFloat(shortTermDebt) || 0;
       const sales = parseFloat(annualSales) || 0;
       const cogs = parseFloat(costOfGoodsSold) || 0;
       const purchases = parseFloat(annualPurchases) || 0;
