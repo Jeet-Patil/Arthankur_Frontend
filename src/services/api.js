@@ -122,3 +122,69 @@ export const deleteCashFlowForecast = async (id) => {
         throw error.response?.data || { error: 'Failed to delete cash flow forecast' };
     }
 };
+
+// Working Capital Analysis APIs
+
+// Save a new working capital analysis
+export const saveWorkingCapitalAnalysis = async (analysisData) => {
+    try {
+        console.log('API service: saving working capital with data:', analysisData);
+        console.log('API endpoint:', `${FINANCIAL_API_URL}/working-capital/analysis`);
+        console.log('Auth header:', getAuthHeader());
+        
+        const response = await axios.post(`${FINANCIAL_API_URL}/working-capital/analysis`, analysisData, getAuthHeader());
+        console.log('API service: received response:', response.data);
+        return response.data;
+    } catch (error) {
+        console.error('Working capital save error:', error);
+        if (error.response) {
+            console.error('Error response status:', error.response.status);
+            console.error('Error response data:', error.response.data);
+        }
+        throw error.response?.data || { error: 'Failed to save working capital analysis' };
+    }
+};
+
+// Get all working capital analyses for a user
+export const getWorkingCapitalAnalyses = async () => {
+    try {
+        const response = await axios.get(`${FINANCIAL_API_URL}/working-capital/analyses`, getAuthHeader());
+        return response.data;
+    } catch (error) {
+        console.error('Error fetching analyses:', error);
+        throw error.response?.data || { error: 'Failed to fetch working capital analyses' };
+    }
+};
+
+// Get a specific working capital analysis
+export const getWorkingCapitalAnalysis = async (id) => {
+    try {
+        const response = await axios.get(`${FINANCIAL_API_URL}/working-capital/analysis/${id}`, getAuthHeader());
+        return response.data;
+    } catch (error) {
+        console.error('Error fetching analysis:', error);
+        throw error.response?.data || { error: 'Failed to fetch working capital analysis' };
+    }
+};
+
+// Update a working capital analysis
+export const updateWorkingCapitalAnalysis = async (id, analysisData) => {
+    try {
+        const response = await axios.put(`${FINANCIAL_API_URL}/working-capital/analysis/${id}`, analysisData, getAuthHeader());
+        return response.data;
+    } catch (error) {
+        console.error('Error updating analysis:', error);
+        throw error.response?.data || { error: 'Failed to update working capital analysis' };
+    }
+};
+
+// Delete a working capital analysis
+export const deleteWorkingCapitalAnalysis = async (id) => {
+    try {
+        const response = await axios.delete(`${FINANCIAL_API_URL}/working-capital/analysis/${id}`, getAuthHeader());
+        return response.data;
+    } catch (error) {
+        console.error('Error deleting analysis:', error);
+        throw error.response?.data || { error: 'Failed to delete working capital analysis' };
+    }
+};

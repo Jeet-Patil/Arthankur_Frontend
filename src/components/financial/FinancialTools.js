@@ -3,6 +3,7 @@ import { PieChart, TrendingUp, Calculator, Wallet } from 'lucide-react';
 import LoanCalculator from './LoanCalculator';
 import FinancialHealthCheck from './FinancialHealthCheck';
 import CashFlowForecasting from './CashFlowForecasting';
+import WorkingCapitalAnalysis from './WorkingCapitalAnalysis';
 import Navbar from '../Navbar';
 
 const FinancialTools = () => {
@@ -63,12 +64,7 @@ const FinancialTools = () => {
           {selectedTool === 'loan-calculator' && <LoanCalculator />}
           {selectedTool === 'financial-health' && <FinancialHealthCheck />}
           {selectedTool === 'cash-flow' && <CashFlowForecasting />}
-          {selectedTool === 'working-capital' && (
-            <div className="bg-white rounded-lg shadow-md p-6">
-              <h2 className="text-xl font-semibold mb-6">Working Capital Analysis</h2>
-              <p>Coming soon...</p>
-            </div>
-          )}
+          {selectedTool === 'working-capital' && <WorkingCapitalAnalysis />}
         </div>
       </div>
     </div>
