@@ -259,8 +259,10 @@ const UserProfile = () => {
                             <div>
                                 <div className="flex flex-col md:flex-row items-start md:items-center justify-between mb-6">
                                     <div className="flex items-center space-x-4">
-                                        <div className="h-20 w-20 rounded-full bg-blue-100 flex items-center justify-center">
-                                            <span className="text-3xl text-blue-700">{user?.name?.charAt(0)}</span>
+                                        <div className="h-20 w-20 rounded-full bg-violet-200 flex items-center justify-center border-2 border-violet-300 shadow-md overflow-hidden">
+                                            <span className="text-4xl font-bold text-violet-700">
+                                                {user?.name ? user.name.charAt(0).toUpperCase() : 'U'}
+                                            </span>
                                         </div>
                                         <div>
                                             <h2 className="text-xl font-semibold">{user?.name}</h2>

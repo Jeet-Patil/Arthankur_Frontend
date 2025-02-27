@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { jwtDecode } from 'jwt-decode';
+import { getUserProfile } from '../services/api';
 
 const Navbar = () => {
     const navigate = useNavigate();
@@ -16,19 +17,37 @@ const Navbar = () => {
             try {
                 const decoded = jwtDecode(token);
                 setUserType(decoded.userType);
-                // If the user info is stored in the token
-                if (decoded.name) {
-                    setUserName(decoded.name);
+                
+                // Check if name exists in localStorage first
+                const storedName = localStorage.getItem('userName');
+                if (storedName) {
+                    setUserName(storedName);
                 }
+                
+                // Still fetch from API to ensure we have the latest data
+                fetchUserData(decoded.userId);
             } catch (error) {
                 console.error('Error decoding token:', error);
             }
         }
     }, []);
 
+    const fetchUserData = async (userId) => {
+        try {
+            const userData = await getUserProfile(userId);
+            if (userData && userData.name) {
+                setUserName(userData.name);
+                localStorage.setItem('userName', userData.name);
+            }
+        } catch (error) {
+            console.error('Error fetching user data:', error);
+        }
+    };
+
     const handleLogout = () => {
         localStorage.removeItem('token');
         localStorage.removeItem('userType');
+        localStorage.removeItem('userName');
         navigate('/login');
     };
 

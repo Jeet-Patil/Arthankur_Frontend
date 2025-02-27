@@ -22,8 +22,17 @@ const Dashboard = () => {
     const StartupDashboard = () => (
         <div className="space-y-8">
             <div className="bg-white p-6 rounded-lg shadow-lg">
-                <h2 className="text-xl font-semibold mb-4">Welcome, {userData?.name || 'Entrepreneur'}</h2>
-                <p className="text-gray-600">Manage your startup's financial journey with Arthankur</p>
+                <div className="flex items-center space-x-4">
+                    <div className="h-16 w-16 rounded-full bg-violet-200 flex items-center justify-center border-2 border-violet-300 shadow-md">
+                        <span className="text-3xl font-bold text-violet-700">
+                            {userData?.name ? userData.name.charAt(0).toUpperCase() : 'S'}
+                        </span>
+                    </div>
+                    <div>
+                        <h2 className="text-xl font-semibold mb-1">Welcome, {userData?.name || 'Entrepreneur'}</h2>
+                        <p className="text-gray-600">Manage your startup's financial journey with Arthankur</p>
+                    </div>
+                </div>
             </div>
             
             <h3 className="text-lg font-medium text-gray-700">Quick Access</h3>
@@ -58,6 +67,11 @@ const Dashboard = () => {
                     <p className="text-gray-600 mb-4">Connect with fellow entrepreneurs and mentors</p>
                     <a href="/community" className="text-violet-600 hover:text-violet-800">View details →</a>
                 </div>
+                <div className="bg-white p-6 rounded-lg shadow-md hover:shadow-lg transition-shadow">
+                    <h2 className="text-xl font-semibold mb-4">Your Profile</h2>
+                    <p className="text-gray-600 mb-4">View and update your profile information</p>
+                    <a href="/profile" className="text-violet-600 hover:text-violet-800">View profile →</a>
+                </div>
             </div>
         </div>
     );
@@ -65,8 +79,17 @@ const Dashboard = () => {
     const InvestorDashboard = () => (
         <div className="space-y-8">
             <div className="bg-white p-6 rounded-lg shadow-lg">
-                <h2 className="text-xl font-semibold mb-4">Welcome, {userData?.name || 'Investor'}</h2>
-                <p className="text-gray-600">Discover promising startups and investment opportunities</p>
+                <div className="flex items-center space-x-4">
+                    <div className="h-16 w-16 rounded-full bg-violet-200 flex items-center justify-center border-2 border-violet-300 shadow-md">
+                        <span className="text-3xl font-bold text-violet-700">
+                            {userData?.name ? userData.name.charAt(0).toUpperCase() : 'I'}
+                        </span>
+                    </div>
+                    <div>
+                        <h2 className="text-xl font-semibold mb-1">Welcome, {userData?.name || 'Investor'}</h2>
+                        <p className="text-gray-600">Discover promising startups and investment opportunities</p>
+                    </div>
+                </div>
             </div>
             
             <h3 className="text-lg font-medium text-gray-700">Quick Access</h3>
@@ -90,6 +113,11 @@ const Dashboard = () => {
                     <h2 className="text-xl font-semibold mb-4">Community</h2>
                     <p className="text-gray-600 mb-4">Connect with fellow investors and entrepreneurs</p>
                     <a href="/community" className="text-violet-600 hover:text-violet-800">View details →</a>
+                </div>
+                <div className="bg-white p-6 rounded-lg shadow-md hover:shadow-lg transition-shadow">
+                    <h2 className="text-xl font-semibold mb-4">Your Profile</h2>
+                    <p className="text-gray-600 mb-4">View and update your profile information</p>
+                    <a href="/profile" className="text-violet-600 hover:text-violet-800">View profile →</a>
                 </div>
             </div>
         </div>

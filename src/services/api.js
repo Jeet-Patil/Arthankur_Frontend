@@ -18,6 +18,12 @@ export const registerUser = async (userData) => {
         if (response.data.token) {
             localStorage.setItem('token', response.data.token);
             localStorage.setItem('userType', response.data.userType);
+            
+            // Store user info in local storage
+            if (response.data.user) {
+                localStorage.setItem('userName', response.data.user.name || '');
+                localStorage.setItem('userId', response.data.user.id || '');
+            }
         }
         return response.data;
     } catch (error) {
@@ -31,6 +37,12 @@ export const loginUser = async (credentials) => {
         if (response.data.token) {
             localStorage.setItem('token', response.data.token);
             localStorage.setItem('userType', response.data.userType);
+            
+            // Store user info in local storage
+            if (response.data.user) {
+                localStorage.setItem('userName', response.data.user.name || '');
+                localStorage.setItem('userId', response.data.user.id || '');
+            }
         }
         return response.data;
     } catch (error) {
