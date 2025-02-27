@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { PieChart, TrendingUp, Calculator, Wallet } from 'lucide-react';
 import LoanCalculator from './LoanCalculator';
 import FinancialHealthCheck from './FinancialHealthCheck';
+import CashFlowForecasting from './CashFlowForecasting';
 import Navbar from '../Navbar';
 
 const FinancialTools = () => {
@@ -61,12 +62,7 @@ const FinancialTools = () => {
         <div className="mt-8">
           {selectedTool === 'loan-calculator' && <LoanCalculator />}
           {selectedTool === 'financial-health' && <FinancialHealthCheck />}
-          {selectedTool === 'cash-flow' && (
-            <div className="bg-white rounded-lg shadow-md p-6">
-              <h2 className="text-xl font-semibold mb-6">Cash Flow Forecasting</h2>
-              <p>Coming soon...</p>
-            </div>
-          )}
+          {selectedTool === 'cash-flow' && <CashFlowForecasting />}
           {selectedTool === 'working-capital' && (
             <div className="bg-white rounded-lg shadow-md p-6">
               <h2 className="text-xl font-semibold mb-6">Working Capital Analysis</h2>
