@@ -12,6 +12,7 @@ import Funding from './components/Funding';
 import Loans from './components/Loans';
 import Community from './components/Community';
 import Layout from './components/Layout';
+import UserProfile from './components/UserProfile';
 import './App.css';
 
 // These will be created later or already exist
@@ -64,6 +65,15 @@ const App = () => {
             element={
               <ProtectedRoute>
                 <Community />
+              </ProtectedRoute>
+            }
+          />
+          
+          <Route
+            path="/profile"
+            element={
+              <ProtectedRoute>
+                <UserProfile />
               </ProtectedRoute>
             }
           />

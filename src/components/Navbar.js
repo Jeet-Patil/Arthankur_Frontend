@@ -6,7 +6,9 @@ const Navbar = () => {
     const navigate = useNavigate();
     const location = useLocation();
     const [userType, setUserType] = useState(null);
+    const [userName, setUserName] = useState('');
     const [isOpen, setIsOpen] = useState(false);
+    const [isProfileMenuOpen, setIsProfileMenuOpen] = useState(false);
 
     useEffect(() => {
         const token = localStorage.getItem('token');
@@ -14,6 +16,10 @@ const Navbar = () => {
             try {
                 const decoded = jwtDecode(token);
                 setUserType(decoded.userType);
+                // If the user info is stored in the token
+                if (decoded.name) {
+                    setUserName(decoded.name);
+                }
             } catch (error) {
                 console.error('Error decoding token:', error);
             }
@@ -22,6 +28,7 @@ const Navbar = () => {
 
     const handleLogout = () => {
         localStorage.removeItem('token');
+        localStorage.removeItem('userType');
         navigate('/login');
     };
 
@@ -41,6 +48,10 @@ const Navbar = () => {
 
     const toggleMenu = () => {
         setIsOpen(!isOpen);
+    };
+
+    const toggleProfileMenu = () => {
+        setIsProfileMenuOpen(!isProfileMenuOpen);
     };
 
     const startupNavLinks = [
@@ -98,12 +109,40 @@ const Navbar = () => {
                                 {link.label}
                             </Link>
                         ))}
-                        <button
-                            onClick={handleLogout}
-                            className="bg-violet-600 text-white px-4 py-2 rounded-lg hover:bg-violet-700 ml-4"
-                        >
-                            Logout
-                        </button>
+                        
+                        {/* Profile dropdown */}
+                        <div className="relative ml-3">
+                            <div>
+                                <button
+                                    onClick={toggleProfileMenu}
+                                    className="flex text-sm rounded-full focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-violet-500"
+                                >
+                                    <div className="h-8 w-8 rounded-full bg-violet-200 flex items-center justify-center text-violet-600 font-semibold">
+                                        {userName ? userName.charAt(0).toUpperCase() : 'U'}
+                                    </div>
+                                </button>
+                            </div>
+                            {isProfileMenuOpen && (
+                                <div className="origin-top-right absolute right-0 mt-2 w-48 rounded-md shadow-lg py-1 bg-white ring-1 ring-black ring-opacity-5 z-10">
+                                    <Link
+                                        to="/profile"
+                                        className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+                                        onClick={() => setIsProfileMenuOpen(false)}
+                                    >
+                                        Your Profile
+                                    </Link>
+                                    <button
+                                        onClick={() => {
+                                            handleLogout();
+                                            setIsProfileMenuOpen(false);
+                                        }}
+                                        className="block w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+                                    >
+                                        Logout
+                                    </button>
+                                </div>
+                            )}
+                        </div>
                     </div>
                 </div>
             </div>
@@ -122,6 +161,13 @@ const Navbar = () => {
                                 {link.label}
                             </Link>
                         ))}
+                        <Link
+                            to="/profile"
+                            className="block py-2 px-4 rounded text-gray-600"
+                            onClick={() => setIsOpen(false)}
+                        >
+                            Your Profile
+                        </Link>
                         <button
                             onClick={handleLogout}
                             className="bg-violet-600 text-white px-4 py-2 rounded-lg hover:bg-violet-700 mt-2"
