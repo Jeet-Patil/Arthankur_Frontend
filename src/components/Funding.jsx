@@ -29,7 +29,8 @@ const Funding = () => {
     statusOverview: {
       inProgress: 0,
       approved: 0,
-      rejected: 0
+      rejected: 0,
+      pending: 0
     }
   });
   const [editMode, setEditMode] = useState(false);
@@ -119,6 +120,55 @@ const Funding = () => {
     }
   };
 
+  // Add function to calculate dashboard statistics from funding requests
+  const calculateDashboardStats = (fundingRequests) => {
+    // Initialize stat counters
+    let totalFundingAmount = 0;
+    let activeRequestsCount = 0;
+    let totalInterestsCount = 0;
+    let statusCounts = {
+      pending: 0,
+      in_progress: 0,
+      approved: 0,
+      rejected: 0
+    };
+
+    // Loop through funding requests to calculate stats
+    fundingRequests.forEach(request => {
+      // Add to total funding amount
+      totalFundingAmount += request.maxAmount;
+      
+      // Count active requests (pending or in_progress)
+      if (request.status === 'pending' || request.status === 'in_progress') {
+        activeRequestsCount++;
+      }
+      
+      // Count total interests
+      if (request.interests && Array.isArray(request.interests)) {
+        totalInterestsCount += request.interests.length;
+      }
+      
+      // Count by status
+      if (statusCounts.hasOwnProperty(request.status)) {
+        statusCounts[request.status]++;
+      }
+    });
+
+    // Return formatted stats
+    return {
+      totalFunding: `₹${totalFundingAmount.toLocaleString()}`,
+      activeRequests: activeRequestsCount,
+      investorInterest: totalInterestsCount,
+      scheduledMeetings: 0, // This would need a different data source
+      statusOverview: {
+        inProgress: statusCounts.in_progress,
+        approved: statusCounts.approved,
+        rejected: statusCounts.rejected,
+        pending: statusCounts.pending
+      }
+    };
+  };
+
   // Add this function to fetch funding requests
   const fetchFundingRequests = async () => {
     try {
@@ -136,6 +186,10 @@ const Funding = () => {
       const data = await response.json();
       setFundingRequests(data);
       console.log("Funding requests with interests:", data);
+      
+      // Calculate and update dashboard stats based on actual funding requests
+      const stats = calculateDashboardStats(data);
+      setDashboardStats(stats);
     } catch (error) {
       console.error('Error fetching funding requests:', error);
       toast.error('Failed to load funding requests');
@@ -164,7 +218,8 @@ const Funding = () => {
         statusOverview: {
           inProgress: data.inProgress,
           approved: data.approved,
-          rejected: data.rejected
+          rejected: data.rejected,
+          pending: data.pending
         }
       });
     } catch (error) {
@@ -309,7 +364,71 @@ const Funding = () => {
             {/* Status Overview */}
             <div className="bg-white p-6 rounded-lg shadow-md">
               <h2 className="text-lg font-semibold mb-4">Funding Status Overview</h2>
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+              <div className="grid grid-cols-1 gap-6">
+                {/* Status cards with progress bars */}
+                <div>
+                  <div className="flex justify-between mb-1">
+                    <span className="font-medium text-yellow-700">In Progress</span>
+                    <span className="font-medium text-yellow-700">
+                      {dashboardStats.statusOverview.inProgress} / {fundingRequests.length}
+                    </span>
+                  </div>
+                  <div className="w-full bg-gray-200 rounded-full h-2.5">
+                    <div 
+                      className="bg-yellow-500 h-2.5 rounded-full" 
+                      style={{ width: `${fundingRequests.length ? (dashboardStats.statusOverview.inProgress / fundingRequests.length) * 100 : 0}%` }}
+                    ></div>
+                  </div>
+                </div>
+                
+                <div>
+                  <div className="flex justify-between mb-1">
+                    <span className="font-medium text-green-700">Approved</span>
+                    <span className="font-medium text-green-700">
+                      {dashboardStats.statusOverview.approved} / {fundingRequests.length}
+                    </span>
+                  </div>
+                  <div className="w-full bg-gray-200 rounded-full h-2.5">
+                    <div 
+                      className="bg-green-500 h-2.5 rounded-full" 
+                      style={{ width: `${fundingRequests.length ? (dashboardStats.statusOverview.approved / fundingRequests.length) * 100 : 0}%` }}
+                    ></div>
+                  </div>
+                </div>
+                
+                <div>
+                  <div className="flex justify-between mb-1">
+                    <span className="font-medium text-red-700">Rejected</span>
+                    <span className="font-medium text-red-700">
+                      {dashboardStats.statusOverview.rejected} / {fundingRequests.length}
+                    </span>
+                  </div>
+                  <div className="w-full bg-gray-200 rounded-full h-2.5">
+                    <div 
+                      className="bg-red-500 h-2.5 rounded-full" 
+                      style={{ width: `${fundingRequests.length ? (dashboardStats.statusOverview.rejected / fundingRequests.length) * 100 : 0}%` }}
+                    ></div>
+                  </div>
+                </div>
+                
+                <div>
+                  <div className="flex justify-between mb-1">
+                    <span className="font-medium text-blue-700">Pending</span>
+                    <span className="font-medium text-blue-700">
+                      {dashboardStats.statusOverview.pending} / {fundingRequests.length}
+                    </span>
+                  </div>
+                  <div className="w-full bg-gray-200 rounded-full h-2.5">
+                    <div 
+                      className="bg-blue-500 h-2.5 rounded-full" 
+                      style={{ width: `${fundingRequests.length ? (dashboardStats.statusOverview.pending / fundingRequests.length) * 100 : 0}%` }}
+                    ></div>
+                  </div>
+                </div>
+              </div>
+              
+              {/* Original status cards */}
+              <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mt-6">
                 <div className="bg-yellow-50 p-4 rounded-md">
                   <div className="flex justify-between items-center">
                     <span className="text-yellow-700">In Progress</span>
@@ -333,6 +452,15 @@ const Funding = () => {
                     <span className="text-red-700">Rejected</span>
                     <span className="text-2xl font-bold text-red-700">
                       {dashboardStats.statusOverview.rejected}
+                    </span>
+                  </div>
+                </div>
+                
+                <div className="bg-blue-50 p-4 rounded-md">
+                  <div className="flex justify-between items-center">
+                    <span className="text-blue-700">Pending</span>
+                    <span className="text-2xl font-bold text-blue-700">
+                      {dashboardStats.statusOverview.pending}
                     </span>
                   </div>
                 </div>
