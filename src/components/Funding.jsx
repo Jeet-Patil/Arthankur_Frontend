@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { toast } from 'react-hot-toast';
 import { Plus, DollarSign, Users, Calendar, PieChart } from 'lucide-react';
 import Navbar from './Navbar';
-import { acceptFundingInterest } from '../services/api';
+import { acceptFundingInterest, deleteFundingRequest } from '../services/api';
 
 const Funding = () => {
   const [showForm, setShowForm] = useState(false);
@@ -265,32 +265,21 @@ const Funding = () => {
     window.scrollTo(0, 0);
   };
 
-  // Add this function to handle deleting a funding request
+  // Update the handleDeleteFunding function
   const handleDeleteFunding = async (fundingId) => {
     if (!window.confirm('Are you sure you want to delete this funding request?')) {
       return;
     }
 
     try {
-      const token = localStorage.getItem('token');
-      const response = await fetch(`http://localhost:5000/api/funding/${fundingId}`, {
-        method: 'DELETE',
-        headers: {
-          'Authorization': `Bearer ${token}`
-        }
-      });
-
-      if (!response.ok) {
-        throw new Error('Failed to delete funding request');
-      }
-
+      await deleteFundingRequest(fundingId);
       toast.success('Funding request deleted successfully');
       // Refresh the list
       fetchFundingRequests();
       fetchDashboardStats();
     } catch (error) {
       console.error('Error deleting funding request:', error);
-      toast.error('Failed to delete funding request');
+      toast.error(error.error || 'Failed to delete funding request');
     }
   };
 

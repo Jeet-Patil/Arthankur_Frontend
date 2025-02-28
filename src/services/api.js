@@ -265,3 +265,17 @@ export const markNotificationAsRead = async (notificationId) => {
         throw error.response?.data || { error: 'Failed to mark notification as read' };
     }
 };
+
+// Delete a funding request
+export const deleteFundingRequest = async (id) => {
+    try {
+        const response = await axios.delete(
+            `http://localhost:5000/api/funding/${id}`,
+            getAuthHeader()
+        );
+        return response.data;
+    } catch (error) {
+        console.error('Error deleting funding request:', error);
+        throw error.response?.data || { error: 'Failed to delete funding request' };
+    }
+};
