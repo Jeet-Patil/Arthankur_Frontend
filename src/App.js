@@ -63,6 +63,15 @@ const App = () => {
           />
           
           <Route
+            path="/virtual-pitch"
+            element={
+              <ProtectedRoute>
+                <VirtualPitch />
+              </ProtectedRoute>
+            }
+          />
+          
+          <Route
             path="/community"
             element={
               <ProtectedRoute>
@@ -127,15 +136,6 @@ const App = () => {
           />
           
           {/* Investor Only Routes */}
-          <Route
-            path="/virtual-pitch"
-            element={
-              <ProtectedRoute allowedUserTypes={['investor']}>
-                <VirtualPitch />
-              </ProtectedRoute>
-            }
-          />
-          
           <Route
             path="/explore-startups"
             element={
