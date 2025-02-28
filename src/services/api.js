@@ -240,3 +240,28 @@ export const acceptFundingInterest = async (fundingId, interestId) => {
         throw error.response?.data || { error: 'Failed to accept investor interest' };
     }
 };
+
+// Notification APIs
+export const getNotifications = async () => {
+    try {
+        const response = await axios.get('http://localhost:5000/api/notifications', getAuthHeader());
+        return response.data;
+    } catch (error) {
+        console.error('Error fetching notifications:', error);
+        throw error.response?.data || { error: 'Failed to fetch notifications' };
+    }
+};
+
+export const markNotificationAsRead = async (notificationId) => {
+    try {
+        const response = await axios.put(
+            `http://localhost:5000/api/notifications/${notificationId}/read`,
+            {},
+            getAuthHeader()
+        );
+        return response.data;
+    } catch (error) {
+        console.error('Error marking notification as read:', error);
+        throw error.response?.data || { error: 'Failed to mark notification as read' };
+    }
+};

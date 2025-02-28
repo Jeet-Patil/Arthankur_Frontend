@@ -13,6 +13,8 @@ import Loans from './components/Loans';
 import Community from './components/Community';
 import Layout from './components/Layout';
 import UserProfile from './components/UserProfile';
+import Meeting from './components/Meeting';
+import Notifications from './components/Notifications';
 import './App.css';
 
 // These will be created later or already exist
@@ -139,6 +141,15 @@ const App = () => {
             element={
               <ProtectedRoute allowedUserTypes={['investor']}>
                 <ExploreStartups />
+              </ProtectedRoute>
+            }
+          />
+          
+          <Route
+            path="/meeting/:meetingId"
+            element={
+              <ProtectedRoute>
+                <Meeting />
               </ProtectedRoute>
             }
           />
