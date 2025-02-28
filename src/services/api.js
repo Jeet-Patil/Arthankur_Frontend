@@ -2,6 +2,7 @@ import axios from 'axios';
 
 const API_URL = 'http://localhost:5000/api/users';
 const FINANCIAL_API_URL = 'http://localhost:5000/api/financial';
+const TAX_API_URL = 'http://localhost:5000/api/tax';
 
 // Helper function to get auth token
 const getAuthHeader = () => {
@@ -277,5 +278,49 @@ export const deleteFundingRequest = async (id) => {
     } catch (error) {
         console.error('Error deleting funding request:', error);
         throw error.response?.data || { error: 'Failed to delete funding request' };
+    }
+};
+
+// Tax & Compliance APIs
+export const uploadGSTReturn = async (formData) => {
+    try {
+        const response = await axios.post(
+            `${TAX_API_URL}/gst-return`, 
+            formData, 
+            {
+                ...getAuthHeader(),
+                headers: {
+                    ...getAuthHeader().headers,
+                    'Content-Type': 'multipart/form-data'
+                }
+            }
+        );
+        return response.data;
+    } catch (error) {
+        throw error.response?.data || error;
+    }
+};
+
+export const generateTaxReport = async (reportType) => {
+    try {
+        const response = await axios.get(
+            `${TAX_API_URL}/reports/${reportType}`,
+            getAuthHeader()
+        );
+        return response.data;
+    } catch (error) {
+        throw error.response?.data || error;
+    }
+};
+
+export const getComplianceCalendar = async () => {
+    try {
+        const response = await axios.get(
+            `${TAX_API_URL}/calendar`,
+            getAuthHeader()
+        );
+        return response.data;
+    } catch (error) {
+        throw error.response?.data || error;
     }
 };
