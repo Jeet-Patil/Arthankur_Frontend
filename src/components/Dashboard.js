@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { jwtDecode } from 'jwt-decode';
 import Navbar from './Navbar';
+import SuccessStories from './SuccessStories';
 
 const Dashboard = () => {
     const [userType, setUserType] = useState(null);
@@ -131,6 +132,8 @@ const Dashboard = () => {
                     {userType === 'startup' ? 'Startup Dashboard' : 'Investor Dashboard'}
                 </h1>
                 {userType === 'startup' ? <StartupDashboard /> : <InvestorDashboard />}
+                
+                <SuccessStories />
             </div>
         </div>
     );
