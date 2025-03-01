@@ -1,6 +1,7 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import './Landing.css';
+import SuccessStories from './SuccessStories';
 
 export default function Landing() {
     return (
@@ -152,6 +153,8 @@ export default function Landing() {
                     </div>
                 </div>
             </div>
+
+            <SuccessStories />
         </div>
     );
 } 
