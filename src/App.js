@@ -15,6 +15,7 @@ import Layout from './components/Layout';
 import UserProfile from './components/UserProfile';
 import Meeting from './components/Meeting';
 import Notifications from './components/Notifications';
+import Chatbot from './components/Chatbot';
 import './App.css';
 
 // These will be created later or already exist
@@ -28,6 +29,7 @@ const App = () => {
   return (
     <Router>
       <Layout>
+        <Chatbot />
         <Toaster
           position="top-center"
           toastOptions={{
