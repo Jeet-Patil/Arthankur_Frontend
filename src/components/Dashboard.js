@@ -133,7 +133,7 @@ const Dashboard = () => {
                 </h1>
                 {userType === 'startup' ? <StartupDashboard /> : <InvestorDashboard />}
                 
-                <SuccessStories />
+                {/* <SuccessStories /> */}
             </div>
         </div>
     );
