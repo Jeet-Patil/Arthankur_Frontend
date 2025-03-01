@@ -90,20 +90,8 @@ const Chatbot = () => {
           setIsLoading(false);
         }, 500);
       } else {
-        // Use Gemini API response
-        const response = await fetch('http://localhost:5000/api/chatbot/message', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify({ message: inputMessage }),
-        });
-
-        if (!response.ok) {
-          throw new Error('API response was not ok');
-        }
-
-        const data = await response.json();
+        // Use API response
+        const data = await sendChatMessage(inputMessage);
         setMessages(prev => [...prev, { text: data.response, sender: 'bot' }]);
       }
     } catch (error) {
@@ -214,4 +202,4 @@ const Chatbot = () => {
   );
 };
 
-export default Chatbot; 
+export default Chatbot;

@@ -1,9 +1,9 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import StripeCheckout from 'react-stripe-checkout';
-import axios from 'axios';
 import { toast } from 'react-hot-toast';
 import Navbar from '../Navbar';
+import { processPayment } from '../../services/api';
 
 const PaymentGateway = () => {
     const navigate = useNavigate();
@@ -55,25 +55,16 @@ const PaymentGateway = () => {
                 throw new Error('Please enter a valid payment amount');
             }
             
-            // Make API call to backend
-            const response = await axios.post(
-                'http://localhost:5000/api/payments/process',
-                {
-                    amount: amount,
-                    token: token,
-                    purpose: paymentPurpose,
-                    userId: userId
-                },
-                {
-                    headers: {
-                        Authorization: `Bearer ${authToken}`
-                    },
-                    timeout: 10000 // 10 second timeout
-                }
-            );
+            // Make API call to backend using the processPayment function
+            const response = await processPayment({
+                amount: amount,
+                token: token,
+                purpose: paymentPurpose,
+                userId: userId
+            });
             
             // Check if response contains success flag
-            if (response.data && response.data.success) {
+            if (response && response.success) {
                 setSuccess(true);
                 
                 // Show toast notification for successful payment

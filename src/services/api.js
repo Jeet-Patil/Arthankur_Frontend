@@ -2,7 +2,9 @@ import axios from 'axios';
 
 const API_URL = 'http://localhost:5000/api/users';
 const FINANCIAL_API_URL = 'http://localhost:5000/api/financial';
-const TAX_API_URL = 'http://localhost:5000/api/tax';
+const FUNDING_API_URL = 'http://localhost:5000/api/funding';
+const CHATBOT_API_URL = 'http://localhost:5000/api/chatbot';
+const STRIPE_API_URL = 'http://localhost:5000/api/stripe';
 
 // Helper function to get auth token
 const getAuthHeader = () => {
@@ -190,7 +192,29 @@ export const deleteWorkingCapitalAnalysis = async (id) => {
     }
 };
 
-// Investor APIs
+// Chatbot API
+export const checkChatbotStatus = async () => {
+    try {
+        const response = await axios.get(`${CHATBOT_API_URL}/status`);
+        return response.data;
+    } catch (error) {
+        console.error('Error checking chatbot status:', error);
+        throw { status: 'unavailable', mode: 'local', reason: 'error' };
+    }
+};
+
+// Send a message to the chatbot
+export const sendChatMessage = async (message) => {
+    try {
+        const response = await axios.post(`${CHATBOT_API_URL}/message`, { message });
+        return response.data;
+    } catch (error) {
+        console.error('Error sending chat message:', error);
+        throw error.response?.data || { error: 'Failed to send message to chatbot' };
+    }
+};
+
+// Funding APIs
 export const getAllFundingRequests = async () => {
     try {
         const response = await axios.get('http://localhost:5000/api/funding/all', getAuthHeader());
@@ -204,26 +228,22 @@ export const getAllFundingRequests = async () => {
 // Get a specific funding request by ID
 export const getFundingRequestById = async (id) => {
     try {
-        const response = await axios.get(`http://localhost:5000/api/funding/${id}`, getAuthHeader());
+        const response = await axios.get(`${FUNDING_API_URL}/${id}`, getAuthHeader());
         return response.data;
     } catch (error) {
         console.error('Error fetching funding request:', error);
-        throw error.response?.data || { error: 'Failed to fetch funding request details' };
+        throw error.response?.data || { error: 'Failed to fetch funding request' };
     }
 };
 
 // Express interest in a funding request
 export const expressFundingInterest = async (id, message = '') => {
     try {
-        const response = await axios.post(
-            `http://localhost:5000/api/funding/${id}/interest`, 
-            { message }, 
-            getAuthHeader()
-        );
+        const response = await axios.post(`${FUNDING_API_URL}/${id}/interest`, { message }, getAuthHeader());
         return response.data;
     } catch (error) {
-        console.error('Error expressing interest:', error);
-        throw error.response?.data || { error: 'Failed to express interest in funding request' };
+        console.error('Error expressing funding interest:', error);
+        throw error.response?.data || { error: 'Failed to express interest in funding' };
     }
 };
 
@@ -231,14 +251,25 @@ export const expressFundingInterest = async (id, message = '') => {
 export const acceptFundingInterest = async (fundingId, interestId) => {
     try {
         const response = await axios.post(
-            `http://localhost:5000/api/funding/${fundingId}/accept-interest/${interestId}`,
-            {},
+            `${FUNDING_API_URL}/${fundingId}/accept-interest/${interestId}`, 
+            {}, 
             getAuthHeader()
         );
         return response.data;
     } catch (error) {
-        console.error('Error accepting interest:', error);
-        throw error.response?.data || { error: 'Failed to accept investor interest' };
+        console.error('Error accepting funding interest:', error);
+        throw error.response?.data || { error: 'Failed to accept funding interest' };
+    }
+};
+
+// Delete a funding request
+export const deleteFundingRequest = async (id) => {
+    try {
+        const response = await axios.delete(`${FUNDING_API_URL}/${id}`, getAuthHeader());
+        return response.data;
+    } catch (error) {
+        console.error('Error deleting funding request:', error);
+        throw error.response?.data || { error: 'Failed to delete funding request' };
     }
 };
 
@@ -267,86 +298,23 @@ export const markNotificationAsRead = async (notificationId) => {
     }
 };
 
-// Delete a funding request
-export const deleteFundingRequest = async (id) => {
+// Payment APIs
+export const processPayment = async (paymentData) => {
     try {
-        const response = await axios.delete(
-            `http://localhost:5000/api/funding/${id}`,
-            getAuthHeader()
-        );
+        const response = await axios.post(`${STRIPE_API_URL}/process`, paymentData, getAuthHeader());
         return response.data;
     } catch (error) {
-        console.error('Error deleting funding request:', error);
-        throw error.response?.data || { error: 'Failed to delete funding request' };
+        console.error('Error processing payment:', error);
+        throw error.response?.data || { error: 'Failed to process payment' };
     }
 };
 
-// Tax & Compliance APIs
-export const uploadGSTReturn = async (formData) => {
+export const getPaymentHistory = async () => {
     try {
-        const response = await axios.post(
-            `${TAX_API_URL}/gst-return`, 
-            formData, 
-            {
-                ...getAuthHeader(),
-                headers: {
-                    ...getAuthHeader().headers,
-                    'Content-Type': 'multipart/form-data'
-                }
-            }
-        );
+        const response = await axios.get(`${STRIPE_API_URL}/history`, getAuthHeader());
         return response.data;
     } catch (error) {
-        throw error.response?.data || error;
-    }
-};
-
-export const generateTaxReport = async (reportType) => {
-    try {
-        const response = await axios.get(
-            `${TAX_API_URL}/reports/${reportType}`,
-            getAuthHeader()
-        );
-        return response.data;
-    } catch (error) {
-        throw error.response?.data || error;
-    }
-};
-
-export const getComplianceCalendar = async () => {
-    try {
-        const response = await axios.get(
-            `${TAX_API_URL}/calendar`,
-            getAuthHeader()
-        );
-        return response.data;
-    } catch (error) {
-        throw error.response?.data || error;
-    }
-};
-
-export const checkChatbotStatus = async () => {
-    try {
-        const response = await fetch('http://localhost:5000/api/chatbot/status');
-        return await response.json();
-    } catch (error) {
-        console.error('Error checking chatbot status:', error);
-        throw error;
-    }
-};
-
-export const sendChatMessage = async (message) => {
-    try {
-        const response = await fetch('http://localhost:5000/api/chatbot/message', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({ message }),
-        });
-        return await response.json();
-    } catch (error) {
-        console.error('Error sending chat message:', error);
-        throw error;
+        console.error('Error fetching payment history:', error);
+        throw error.response?.data || { error: 'Failed to fetch payment history' };
     }
 };
