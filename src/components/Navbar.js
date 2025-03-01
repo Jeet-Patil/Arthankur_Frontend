@@ -83,6 +83,7 @@ const Navbar = () => {
         { path: '/tax-compliance', label: 'Tax & Compliance' },
         { path: '/schemes', label: 'Schemes' },
         { path: '/community', label: 'Community' },
+        { path: '/payments', label: 'Payments' },
         
 
     ];
@@ -100,7 +101,7 @@ const Navbar = () => {
 
     return (
         <nav className="bg-white shadow-lg">
-            <div className="max-w-7xl mx-auto px-4">
+            <div className="max-w-8xl mx-auto px-7">
                 <div className="flex justify-between h-16">
                     <div className="flex items-center">
                         <Link to="/dashboard" className="flex items-center">

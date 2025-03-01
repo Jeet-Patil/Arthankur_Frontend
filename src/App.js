@@ -23,6 +23,7 @@ import VirtualPitch from './components/investor/VirtualPitch';
 import ExploreStartups from './components/investor/ExploreStartups';
 import PaymentGateway from './components/investor/PaymentGateway';
 import Schemes from './components/startup/Schemes';
+import Payments from './components/startup/Payments';
 import Meetings from './components/Meetings';
 
 const App = () => {
@@ -134,6 +135,15 @@ const App = () => {
             element={
               <ProtectedRoute allowedUserTypes={['startup']}>
                 <Funding />
+              </ProtectedRoute>
+            }
+          />
+          
+          <Route
+            path="/payments"
+            element={
+              <ProtectedRoute allowedUserTypes={['startup']}>
+                <Payments />
               </ProtectedRoute>
             }
           />
