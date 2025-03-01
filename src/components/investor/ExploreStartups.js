@@ -2,6 +2,7 @@ import React, { useState, useEffect, useCallback } from 'react';
 import Navbar from '../Navbar';
 import { getAllFundingRequests, getFundingRequestById, expressFundingInterest } from '../../services/api';
 import { Search, DollarSign, Briefcase, Tag, X } from 'lucide-react';
+import { File, Download } from 'lucide-react';
 import { toast } from 'react-hot-toast';
 
 const ExploreStartups = () => {
@@ -351,6 +352,32 @@ const ExploreStartups = () => {
                                 <h3 className="text-lg font-medium text-gray-900 mb-2">Description</h3>
                                 <p className="text-gray-600 whitespace-pre-line">{selectedStartup.description}</p>
                             </div>
+                            
+                            {/* Documents Section */}
+                            {selectedStartup.attachments && selectedStartup.attachments.length > 0 && (
+                                <div className="mb-6">
+                                    <h3 className="text-lg font-medium text-gray-900 mb-2">Documents</h3>
+                                    <div className="bg-gray-50 p-4 rounded-lg">
+                                        {selectedStartup.attachments.map((attachment, index) => (
+                                            <div key={index} className="flex items-center justify-between py-2 border-b border-gray-200 last:border-0">
+                                                <div className="flex items-center">
+                                                    <File className="h-5 w-5 text-violet-600 mr-2" />
+                                                    <span className="text-gray-700">{attachment.filename}</span>
+                                                </div>
+                                                <a 
+                                                    href={`http://localhost:5000/${attachment.path.replace('uploads/', '')}`} 
+                                                    target="_blank" 
+                                                    rel="noopener noreferrer"
+                                                    className="flex items-center text-violet-600 hover:text-violet-800"
+                                                >
+                                                    <Download className="h-4 w-4 mr-1" />
+                                                    View
+                                                </a>
+                                            </div>
+                                        ))}
+                                    </div>
+                                </div>
+                            )}
                             
                             {!checkIfAlreadyInterested(selectedStartup) && (
                                 <div className="mb-6">
