@@ -90,9 +90,10 @@ const Navbar = () => {
     const investorNavLinks = [
         { path: '/dashboard', label: 'Dashboard' },
         { path: '/meetings', label: 'Meetings' },
-{ path: '/virtual-pitch', label: 'Virtual Pitch' },
+        { path: '/virtual-pitch', label: 'Virtual Pitch' },
         { path: '/community', label: 'Community' },
-        { path: '/explore-startups', label: 'Explore Startups' }
+        { path: '/explore-startups', label: 'Explore Startups' },
+        { path: '/payment', label: 'Payment' }
     ];
 
     const navLinks = userType === 'startup' ? startupNavLinks : investorNavLinks;

@@ -20,6 +20,7 @@ import './App.css';
 // These will be created later or already exist
 import VirtualPitch from './components/investor/VirtualPitch';
 import ExploreStartups from './components/investor/ExploreStartups';
+import PaymentGateway from './components/investor/PaymentGateway';
 import Schemes from './components/startup/Schemes';
 import Meetings from './components/Meetings';
 
@@ -141,6 +142,15 @@ const App = () => {
             element={
               <ProtectedRoute allowedUserTypes={['investor']}>
                 <ExploreStartups />
+              </ProtectedRoute>
+            }
+          />
+          
+          <Route
+            path="/payment"
+            element={
+              <ProtectedRoute allowedUserTypes={['investor']}>
+                <PaymentGateway />
               </ProtectedRoute>
             }
           />
