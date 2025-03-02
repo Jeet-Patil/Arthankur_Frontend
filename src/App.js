@@ -21,7 +21,6 @@ import GovernmentSchemes from './components/GovernmentSchemes';
 import './App.css';
 
 // These will be created later or already exist
-import VirtualPitch from './components/investor/VirtualPitch';
 import ExploreStartups from './components/investor/ExploreStartups';
 import PaymentGateway from './components/investor/PaymentGateway';
 import Schemes from './components/startup/Schemes';
@@ -65,15 +64,6 @@ const App = () => {
             element={
               <ProtectedRoute>
                 <Meetings />
-              </ProtectedRoute>
-            }
-          />
-          
-          <Route
-            path="/virtual-pitch"
-            element={
-              <ProtectedRoute>
-                <VirtualPitch />
               </ProtectedRoute>
             }
           />

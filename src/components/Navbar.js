@@ -57,21 +57,17 @@ const Navbar = () => {
         { path: '/dashboard', label: 'Dashboard' },
         { path: '/funding', label: 'Funding' },
         { path: '/meetings', label: 'Meetings' },
-        { path: '/virtual-pitch', label: 'Virtual Pitch' },
         { path: '/loans', label: 'Loans' },
         { path: '/financial-tools', label: 'Financial Tools' },
         { path: '/tax-compliance', label: 'Tax & Compliance' },
         { path: '/schemes', label: 'Schemes' },
         { path: '/community', label: 'Community' },
         { path: '/payments', label: 'Payments' },
-        
-
     ];
 
     const investorNavLinks = [
         { path: '/dashboard', label: 'Dashboard' },
         { path: '/meetings', label: 'Meetings' },
-        { path: '/virtual-pitch', label: 'Virtual Pitch' },
         { path: '/community', label: 'Community' },
         { path: '/explore-startups', label: 'Explore Startups' },
         { path: '/payment', label: 'Payment' }

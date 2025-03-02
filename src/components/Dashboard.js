@@ -142,11 +142,6 @@ const Dashboard = () => {
                     <a href="/explore-startups" className="text-violet-600 hover:text-violet-800">View details →</a>
                 </div>
                 <div className="bg-white p-6 rounded-lg shadow-md hover:shadow-lg transition-shadow">
-                    <h2 className="text-xl font-semibold mb-4">Virtual Pitch</h2>
-                    <p className="text-gray-600 mb-4">Attend online pitch sessions from startups</p>
-                    <a href="/virtual-pitch" className="text-violet-600 hover:text-violet-800">View details →</a>
-                </div>
-                <div className="bg-white p-6 rounded-lg shadow-md hover:shadow-lg transition-shadow">
                     <h2 className="text-xl font-semibold mb-4">Upcoming Meetings</h2>
                     <p className="text-gray-600 mb-4">Schedule and manage startup meetings</p>
                     <a href="/meetings" className="text-violet-600 hover:text-violet-800">View details →</a>

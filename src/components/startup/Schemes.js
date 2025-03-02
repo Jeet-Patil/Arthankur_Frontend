@@ -296,7 +296,7 @@ const Schemes = () => {
     
     // Helper function to map startup stage values
     const mapStartupStage = (stage) => {
-        if (!stage) return '';
+        if (!stage) return 'Idea'; // Default to 'Idea' instead of empty string
         
         // Map from registration form values to criteria values
         const stageMap = {
