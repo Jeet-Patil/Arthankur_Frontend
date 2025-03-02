@@ -23,6 +23,7 @@ import './App.css';
 // These will be created later or already exist
 import ExploreStartups from './components/investor/ExploreStartups';
 import PaymentGateway from './components/investor/PaymentGateway';
+import VirtualPitch from './components/investor/VirtualPitch';
 import Schemes from './components/startup/Schemes';
 import Payments from './components/startup/Payments';
 import Meetings from './components/Meetings';
@@ -174,6 +175,24 @@ const App = () => {
             element={
               <ProtectedRoute>
                 <Meeting />
+              </ProtectedRoute>
+            }
+          />
+          
+          <Route
+            path="/virtual-pitch/:roomId"
+            element={
+              <ProtectedRoute>
+                <VirtualPitch />
+              </ProtectedRoute>
+            }
+          />
+          
+          <Route
+            path="/virtual-pitch/:roomId"
+            element={
+              <ProtectedRoute>
+                <VirtualPitch />
               </ProtectedRoute>
             }
           />

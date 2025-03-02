@@ -2,7 +2,10 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { format } from 'date-fns';
 import { toast } from 'react-hot-toast';
+import { Presentation } from 'lucide-react';
 import Navbar from './Navbar';
+import { getVirtualPitchForMeeting } from '../services/api';
+import { useNavigate } from 'react-router-dom';
 
 const Meetings = () => {
     const [meetings, setMeetings] = useState([]);
@@ -18,6 +21,7 @@ const Meetings = () => {
 
     const token = localStorage.getItem('token');
     const currentUserId = localStorage.getItem('userId');
+    const navigate = useNavigate();
 
     const axiosConfig = {
         headers: {
@@ -146,6 +150,70 @@ const Meetings = () => {
         if (meeting.requestedBy._id === currentUserId) return 'sender';
         if (meeting.requestedTo._id === currentUserId) return 'receiver';
         return null;
+    };
+
+    const [isLoading, setIsLoading] = useState(false);
+
+    const joinVirtualPitch = async (meetingId) => {
+        try {
+            console.log('Joining virtual pitch for meeting:', meetingId);
+            setIsLoading(true);
+            
+            const virtualPitchInfo = await getVirtualPitchForMeeting(meetingId);
+            console.log('Virtual pitch info received:', virtualPitchInfo);
+            
+            if (virtualPitchInfo && virtualPitchInfo.virtualPitchRoomId) {
+                // Check if the virtualPitchRoomId is valid
+                if (!virtualPitchInfo.virtualPitchRoomId.trim()) {
+                    console.error('Empty virtual pitch room ID received');
+                    toast.error('Invalid virtual pitch room. Please try refreshing the page or contact support.');
+                    setIsLoading(false);
+                    return;
+                }
+                
+                toast.success('Connecting to virtual pitch room...');
+                const virtualPitchRoomId = virtualPitchInfo.virtualPitchRoomId;
+                
+                // Save meeting ID to localStorage for reference
+                localStorage.setItem('currentVirtualPitchMeetingId', meetingId);
+                
+                // Navigate to the virtual pitch page with the room ID
+                navigate(`/virtual-pitch/${virtualPitchRoomId}`);
+            } else {
+                console.error('Missing or invalid virtual pitch info:', virtualPitchInfo);
+                toast.error('Could not find virtual pitch room. The system will create one now.');
+                
+                // Try to refresh the meeting to generate a new room ID
+                try {
+                    const response = await axios.patch(
+                        `http://localhost:5000/api/meetings/${meetingId}/refresh-virtual-pitch`,
+                        {},
+                        {
+                            headers: {
+                                'Content-Type': 'application/json',
+                                'x-auth-token': localStorage.getItem('token')
+                            }
+                        }
+                    );
+                    
+                    if (response.data && response.data.virtualPitchRoomId) {
+                        toast.success('Virtual pitch room created. Connecting now...');
+                        navigate(`/virtual-pitch/${response.data.virtualPitchRoomId}`);
+                    } else {
+                        toast.error('Could not create virtual pitch room. Please try again later.');
+                    }
+                } catch (refreshError) {
+                    console.error('Error refreshing virtual pitch:', refreshError);
+                    toast.error('Could not create virtual pitch room. Please try again later or contact support.');
+                }
+            }
+            
+            setIsLoading(false);
+        } catch (error) {
+            setIsLoading(false);
+            console.error('Error joining virtual pitch:', error);
+            toast.error('Failed to join virtual pitch. Please try again later.');
+        }
     };
 
     return (
@@ -303,17 +371,26 @@ const Meetings = () => {
                                             </div>
                                         </div>
                                         
-                                        {meeting.status === 'accepted' && meeting.meetingLink && (
+                                        {meeting.status === 'accepted' && (
                                             <div className="mb-4 p-3 bg-violet-50 rounded-lg">
-                                                <p className="text-sm font-medium text-violet-800 mb-1">Meeting Link</p>
-                                                <a
-                                                    href={meeting.meetingLink}
-                                                    target="_blank"
-                                                    rel="noopener noreferrer"
-                                                    className="text-violet-600 hover:text-violet-700 break-all"
+                                                <p className="text-sm font-medium text-violet-800 mb-2">Virtual Pitch Session</p>
+                                                <button
+                                                    onClick={() => joinVirtualPitch(meeting._id)}
+                                                    className="w-full bg-white border border-violet-600 text-violet-600 px-4 py-2 rounded-lg hover:bg-violet-50 transition-colors duration-200 flex items-center justify-center"
+                                                    disabled={isLoading}
                                                 >
-                                                    {meeting.meetingLink}
-                                                </a>
+                                                    {isLoading ? (
+                                                        <>
+                                                            <span className="animate-spin rounded-full h-4 w-4 border-b-2 border-violet-700 mr-2"></span>
+                                                            Connecting...
+                                                        </>
+                                                    ) : (
+                                                        <>
+                                                            <Presentation className="h-4 w-4 mr-2" />
+                                                            Join Virtual Pitch
+                                                        </>
+                                                    )}
+                                                </button>
                                             </div>
                                         )}
 

@@ -5,6 +5,8 @@ const FINANCIAL_API_URL = 'http://localhost:5000/api/financial';
 const FUNDING_API_URL = 'http://localhost:5000/api/funding';
 const CHATBOT_API_URL = 'http://localhost:5000/api/chatbot';
 const STRIPE_API_URL = 'http://localhost:5000/api/stripe';
+const VIRTUAL_PITCH_API_URL = 'http://localhost:5000/api/virtual-pitch';
+const MEETINGS_API_URL = 'http://localhost:5000/api/meetings';
 
 // Helper function to get auth token
 const getAuthHeader = () => {
@@ -301,20 +303,86 @@ export const markNotificationAsRead = async (notificationId) => {
 // Payment APIs
 export const processPayment = async (paymentData) => {
     try {
-        const response = await axios.post(`${STRIPE_API_URL}/process`, paymentData, getAuthHeader());
+        const response = await axios.post(`${STRIPE_API_URL}/process-payment`, paymentData, getAuthHeader());
         return response.data;
     } catch (error) {
-        console.error('Error processing payment:', error);
         throw error.response?.data || { error: 'Failed to process payment' };
     }
 };
 
 export const getPaymentHistory = async () => {
     try {
-        const response = await axios.get(`${STRIPE_API_URL}/history`, getAuthHeader());
+        const response = await axios.get(`${STRIPE_API_URL}/payment-history`, getAuthHeader());
         return response.data;
     } catch (error) {
-        console.error('Error fetching payment history:', error);
         throw error.response?.data || { error: 'Failed to fetch payment history' };
+    }
+};
+
+// Virtual Pitch APIs
+export const getVirtualPitchForMeeting = async (meetingId) => {
+    try {
+        const response = await axios.get(`${MEETINGS_API_URL}/${meetingId}/virtual-pitch`, getAuthHeader());
+        return response.data;
+    } catch (error) {
+        throw error.response?.data || { error: 'Failed to fetch virtual pitch information' };
+    }
+};
+
+// Get all meetings for the current user
+export const getMeetings = async () => {
+    try {
+        const response = await axios.get(MEETINGS_API_URL, getAuthHeader());
+        return response.data;
+    } catch (error) {
+        throw error.response?.data || { error: 'Failed to fetch meetings' };
+    }
+};
+
+export const getOrCreateVirtualPitchByRoomId = async (roomId) => {
+    try {
+        const response = await axios.get(`${VIRTUAL_PITCH_API_URL}/room/${roomId}`, getAuthHeader());
+        return response.data;
+    } catch (error) {
+        throw error.response?.data || { error: 'Failed to access virtual pitch room' };
+    }
+};
+
+export const getAllVirtualPitches = async (queryParams = {}) => {
+    try {
+        const { industry, search } = queryParams;
+        let url = VIRTUAL_PITCH_API_URL;
+        
+        // Add query parameters if provided
+        const params = new URLSearchParams();
+        if (industry) params.append('industry', industry);
+        if (search) params.append('search', search);
+        
+        if (params.toString()) {
+            url += `?${params.toString()}`;
+        }
+        
+        const response = await axios.get(url, getAuthHeader());
+        return response.data;
+    } catch (error) {
+        throw error.response?.data || { error: 'Failed to fetch virtual pitches' };
+    }
+};
+
+export const getMyVirtualPitches = async () => {
+    try {
+        const response = await axios.get(`${VIRTUAL_PITCH_API_URL}/my-pitches`, getAuthHeader());
+        return response.data;
+    } catch (error) {
+        throw error.response?.data || { error: 'Failed to fetch your virtual pitches' };
+    }
+};
+
+export const joinVirtualPitch = async (pitchId) => {
+    try {
+        const response = await axios.post(`${VIRTUAL_PITCH_API_URL}/${pitchId}/join`, {}, getAuthHeader());
+        return response.data;
+    } catch (error) {
+        throw error.response?.data || { error: 'Failed to join virtual pitch' };
     }
 };
