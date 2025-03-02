@@ -100,7 +100,7 @@ const Register = () => {
                             onClick={() => setUserType('startup')}
                             className="w-full bg-violet-600 text-white py-3 rounded-lg hover:bg-violet-700"
                         >
-                            Register as Startup
+                            Register as Startup/MSME
                         </button>
                         <button
                             onClick={() => setUserType('investor')}
@@ -120,7 +120,7 @@ const Register = () => {
             <div className="min-h-screen bg-gradient-to-r from-violet-500 to-pink-500 flex items-center justify-center">
                 <div className="bg-white p-8 rounded-2xl shadow-xl w-96">
                     <h2 className="text-3xl font-semibold text-center text-gray-800 mb-6">
-                        Startup Registration
+                        Startup/MSME Registration
                     </h2>
                     <form onSubmit={handleStartupContinue} className="space-y-4">
                         <input
@@ -188,7 +188,7 @@ const Register = () => {
                         />
                         <textarea
                             name="about"
-                            placeholder="About your startup"
+                            placeholder="About your startup/MSME"
                             value={formData.about}
                             onChange={handleChange}
                             className="w-full px-4 py-2 rounded-lg border focus:outline-none focus:ring-2 focus:ring-violet-500"
@@ -352,7 +352,7 @@ const Register = () => {
         <div className="min-h-screen bg-gradient-to-r from-violet-500 to-pink-500 flex items-center justify-center">
             <div className="bg-white p-8 rounded-2xl shadow-xl w-96">
                 <h2 className="text-3xl font-semibold text-center text-gray-800 mb-6">
-                    Investor Registration
+                    {userType === 'startup' ? 'Startup/MSME Registration' : 'Investor Registration'}
                 </h2>
                 <form onSubmit={handleSubmit} className="space-y-4">
                     {/* Common fields */}

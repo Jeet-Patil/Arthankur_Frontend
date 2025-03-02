@@ -18,15 +18,15 @@ export default function Landing() {
                                 <span className="text-4xl font-bold text-violet-600 mr-2">₹</span>
                                 <h1 className="text-4xl font-bold text-gray-900">Arthankur</h1>
                             </div>
-                            <p className="text-2xl italic text-violet-700">Give wings to your startup</p>
+                            <p className="text-2xl italic text-violet-700">Give wings to your startup or MSME</p>
                         </div>
                         
                         <h1 className="text-6xl font-extrabold text-gray-900 leading-tight mb-6">
-                            Connect Startups 
+                            Connect Startups & MSMEs
                             <span className="block text-violet-600">with Investors</span>
                         </h1>
                         <p className="text-xl text-gray-600 mb-8 max-w-lg">
-                            Arthankur is your one-stop platform for startup funding, financial tools, and investor connections.
+                            Arthankur is your one-stop platform for startup and MSME funding, financial tools, and investor connections.
                         </p>
                         <div className="flex gap-4">
                             <Link
@@ -145,11 +145,11 @@ export default function Landing() {
 const steps = [
     {
         title: "Create Profile",
-        description: "Sign up and complete your startup or investor profile with relevant details."
+        description: "Sign up and complete your startup, MSME, or investor profile with relevant details."
     },
     {
         title: "Connect",
-        description: "Browse and connect with potential investors or promising startups."
+        description: "Browse and connect with potential investors or promising startups and MSMEs."
     },
     {
         title: "Collaborate",

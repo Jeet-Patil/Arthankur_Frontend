@@ -31,7 +31,7 @@ const Dashboard = () => {
             <Navbar userType={userType} />
             <div className="max-w-7xl mx-auto px-4 py-6 mt-16">
                 <h1 className="text-3xl font-semibold text-gray-800">
-                    {userType === 'startup' ? 'Startup Dashboard' : 'Investor Dashboard'}
+                    {userType === 'startup' ? 'Startup/MSME Dashboard' : 'Investor Dashboard'}
                 </h1>
                 {userType === 'startup' ? (
                     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mt-6">

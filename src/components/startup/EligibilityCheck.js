@@ -74,7 +74,7 @@ const EligibilityCheck = ({ onClose, onSubmit }) => {
     <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
       <div className="bg-white rounded-lg shadow-xl p-6 w-full max-w-3xl max-h-[90vh] overflow-y-auto">
         <div className="flex justify-between items-center mb-6">
-          <h2 className="text-2xl font-semibold text-gray-800">Check Scheme Eligibility</h2>
+          <h2 className="text-2xl font-semibold text-gray-800">Check Scheme Eligibility for Startups/MSMEs</h2>
           <button onClick={onClose} className="text-gray-500 hover:text-gray-700">
             <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
@@ -85,7 +85,7 @@ const EligibilityCheck = ({ onClose, onSubmit }) => {
         <form onSubmit={handleSubmit}>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">Startup Stage</label>
+              <label className="block text-sm font-medium text-gray-700 mb-1">Startup/MSME Stage</label>
               <select
                 name="startupStage"
                 value={formData.startupStage}
@@ -93,7 +93,7 @@ const EligibilityCheck = ({ onClose, onSubmit }) => {
                 className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-violet-500 focus:border-violet-500"
                 required
               >
-                <option value="">Select Startup Stage</option>
+                <option value="">Select Startup/MSME Stage</option>
                 {stages.map((stage, index) => (
                   <option key={index} value={stage}>{stage}</option>
                 ))}

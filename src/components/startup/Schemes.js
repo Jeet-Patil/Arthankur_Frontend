@@ -35,7 +35,7 @@ const Schemes = () => {
                     colorClass: getRandomColorClass(),
                     details: [
                         { label: 'Funding Amount', value: scheme.fundingAmount },
-                        { label: 'Target Audience', value: scheme.targetAudience }
+                        { label: 'Target Audience', value: scheme.targetAudience.replace(/startup/gi, 'startup/MSME') }
                     ],
                     website: scheme.applicationLink,
                     applicationUrl: scheme.applicationLink,
@@ -415,7 +415,7 @@ const Schemes = () => {
                 <div className="bg-white rounded-lg shadow-md p-6">
                     <h1 className="text-3xl font-semibold text-gray-800 mb-6">Government Schemes</h1>
                     <p className="text-gray-600 mb-8">
-                        Access a comprehensive list of government schemes and programs designed to support startups in India.
+                        Access a comprehensive list of government schemes and programs designed to support startups and MSMEs in India.
                     </p>
                     
                     {eligibleIds.length > 0 ? (
@@ -428,7 +428,7 @@ const Schemes = () => {
                                 </div>
                                 <div className="ml-3">
                                     <h3 className="text-lg font-medium text-green-800">
-                                        Your Startup is Eligible for {eligibleIds.length} Government Schemes!
+                                        Your Startup/MSME is Eligible for {eligibleIds.length} Government Schemes!
                                     </h3>
                                     <div className="mt-2 text-sm text-green-700">
                                         <p>We've automatically checked your eligibility based on the information you provided during registration.</p>
@@ -450,7 +450,7 @@ const Schemes = () => {
                                         No Eligible Schemes Found
                                     </h3>
                                     <div className="mt-2 text-sm text-yellow-700">
-                                        <p>Based on your startup profile, we couldn't find any matching government schemes.</p>
+                                        <p>Based on your startup/MSME profile, we couldn't find any matching government schemes.</p>
                                         <p className="mt-1">You can update your profile information or try the manual eligibility check with different criteria.</p>
                                     </div>
                                 </div>

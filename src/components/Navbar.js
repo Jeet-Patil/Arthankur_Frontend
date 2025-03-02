@@ -70,8 +70,8 @@ const Navbar = () => {
         { path: '/dashboard', label: 'Dashboard' },
         { path: '/meetings', label: 'Meetings' },
         { path: '/community', label: 'Community' },
-        { path: '/explore-startups', label: 'Explore Startups' },
-        { path: '/case-studies', label: 'Case Studies' },
+        { path: '/explore-startups', label: 'Explore Startups & MSMEs' },
+        { path: '/case-studies', label: 'Success Stories' },
         { path: '/payment', label: 'Payment' }
     ];
 

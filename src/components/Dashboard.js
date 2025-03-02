@@ -72,7 +72,7 @@ const Dashboard = () => {
                     </div>
                     <div>
                         <h2 className="text-xl font-semibold mb-1">Welcome, {userData?.name || 'Entrepreneur'}</h2>
-                        <p className="text-gray-600">Manage your startup's financial journey with Arthankur</p>
+                        <p className="text-gray-600">Manage your startup/MSME's financial journey with Arthankur</p>
                     </div>
                 </div>
             </div>

@@ -128,9 +128,9 @@ const ExploreStartups = () => {
             <Navbar />
             <div className="max-w-7xl mx-auto px-4 py-6">
                 <div className="bg-white rounded-lg shadow-md p-6">
-                    <h1 className="text-3xl font-semibold text-gray-800 mb-6">Explore Startups</h1>
+                    <h1 className="text-3xl font-semibold text-gray-800 mb-6">Explore Startups and MSMEs</h1>
                     <p className="text-gray-600 mb-8">
-                        Discover promising startups looking for investment. Use the filters to find startups that match your investment criteria.
+                        Discover promising startups and micro, small, and medium enterprises (MSMEs) looking for investment. Use the filters to find startups that match your investment criteria.
                     </p>
                     
                     <div className="mb-8 grid grid-cols-1 md:grid-cols-4 gap-4">
@@ -299,7 +299,7 @@ const ExploreStartups = () => {
                         </div>
                     ) : (
                         <div className="text-center py-12">
-                            <h3 className="text-lg font-medium text-gray-800 mb-2">No startups found</h3>
+                            <h3 className="text-lg font-medium text-gray-800 mb-2">No startups or MSMEs found</h3>
                             <p className="text-gray-500">Try adjusting your search criteria</p>
                         </div>
                     )}

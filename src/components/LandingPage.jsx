@@ -61,7 +61,7 @@ const LandingPage = () => {
                 <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-24">
                     <div className="text-center">
                         <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold text-white mb-6">
-                            Connecting Startups with Smart Capital
+                            Connecting Startups & MSMEs with Smart Capital
                         </h1>
                         <p className="text-xl text-violet-100 mb-8 max-w-2xl mx-auto">
                             Streamline your fundraising process and connect with the right investors through our intelligent platform.
@@ -158,7 +158,7 @@ const LandingPage = () => {
                             Ready to Start Your Funding Journey?
                         </h2>
                         <p className="text-xl text-violet-100 mb-8 max-w-2xl mx-auto">
-                            Join thousands of successful startups who have found their perfect investors through our platform.
+                            Join thousands of successful startups and MSMEs who have found their perfect investors through our platform.
                         </p>
                         <button
                             onClick={() => navigate('/register')}
