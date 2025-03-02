@@ -303,7 +303,7 @@ export const markNotificationAsRead = async (notificationId) => {
 // Payment APIs
 export const processPayment = async (paymentData) => {
     try {
-        const response = await axios.post(`${STRIPE_API_URL}/process-payment`, paymentData, getAuthHeader());
+        const response = await axios.post(`${STRIPE_API_URL}/process`, paymentData, getAuthHeader());
         return response.data;
     } catch (error) {
         throw error.response?.data || { error: 'Failed to process payment' };
@@ -312,7 +312,7 @@ export const processPayment = async (paymentData) => {
 
 export const getPaymentHistory = async () => {
     try {
-        const response = await axios.get(`${STRIPE_API_URL}/payment-history`, getAuthHeader());
+        const response = await axios.get(`${STRIPE_API_URL}/history`, getAuthHeader());
         return response.data;
     } catch (error) {
         throw error.response?.data || { error: 'Failed to fetch payment history' };
