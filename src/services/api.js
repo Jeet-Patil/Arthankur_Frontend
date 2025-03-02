@@ -200,8 +200,7 @@ export const checkChatbotStatus = async () => {
         const response = await axios.get(`${CHATBOT_API_URL}/status`);
         return response.data;
     } catch (error) {
-        console.error('Error checking chatbot status:', error);
-        throw { status: 'unavailable', mode: 'local', reason: 'error' };
+        throw error.response?.data || { error: 'Failed to check chatbot status' };
     }
 };
 
@@ -211,8 +210,21 @@ export const sendChatMessage = async (message) => {
         const response = await axios.post(`${CHATBOT_API_URL}/message`, { message });
         return response.data;
     } catch (error) {
-        console.error('Error sending chat message:', error);
-        throw error.response?.data || { error: 'Failed to send message to chatbot' };
+        throw error.response?.data || { error: 'Failed to send message' };
+    }
+};
+
+// Get personalized recommendations based on user data
+export const getPersonalizedRecommendations = async (message = '') => {
+    try {
+        const response = await axios.post(
+            `${CHATBOT_API_URL}/recommendations`, 
+            { message }, 
+            getAuthHeader()
+        );
+        return response.data;
+    } catch (error) {
+        throw error.response?.data || { error: 'Failed to get personalized recommendations' };
     }
 };
 

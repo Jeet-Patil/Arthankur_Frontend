@@ -1,6 +1,6 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { MessageSquare, X, Send } from 'lucide-react';
-import { sendChatMessage, checkChatbotStatus } from '../services/api';
+import { MessageSquare, X, Send, Lightbulb } from 'lucide-react';
+import { sendChatMessage, checkChatbotStatus, getPersonalizedRecommendations } from '../services/api';
 import { toast } from 'react-hot-toast';
 
 const Chatbot = () => {
@@ -15,6 +15,7 @@ const Chatbot = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [useLocalMode, setUseLocalMode] = useState(false);
   const [statusChecked, setStatusChecked] = useState(false);
+  const [showRecommendButton, setShowRecommendButton] = useState(true);
   const messagesEndRef = useRef(null);
 
   // Scroll to bottom of messages
@@ -64,6 +65,8 @@ const Chatbot = () => {
       return "Arthankur offers financial tools to help startups with cash flow forecasting and working capital analysis. Explore these features in the 'Financial Tools' section.";
     } else if (msg.includes('tax') || msg.includes('compliance')) {
       return "Our Tax Compliance tools help startups manage their tax obligations. You can upload GST returns and get tax-related insights. Check the 'Tax Compliance' section for more information.";
+    } else if (msg.includes('recommendation') || msg.includes('suggest')) {
+      return "I can provide personalized recommendations based on your startup profile! In the online mode, just click the 'Get Recommendations' button below the chat.";
     } else if (msg.includes('thank')) {
       return "You're welcome! Is there anything else I can help you with?";
     } else {
@@ -107,6 +110,68 @@ const Chatbot = () => {
     }
   };
 
+  // Get personalized recommendations based on the user's startup profile
+  const handleGetRecommendations = async () => {
+    if (isLoading || useLocalMode) return;
+
+    setIsLoading(true);
+    setMessages(prev => [...prev, { 
+      text: "I'd like to get personalized recommendations for my startup.", 
+      sender: 'user' 
+    }]);
+
+    try {
+      // Let the user know we're analyzing their profile
+      setMessages(prev => [...prev, { 
+        text: "Analyzing your startup profile data to provide personalized recommendations...", 
+        sender: 'bot',
+        className: 'italic'
+      }]);
+
+      // Get personalized recommendations from the API
+      const data = await getPersonalizedRecommendations();
+      
+      // Add the recommendations to the chat
+      setMessages(prev => {
+        // Remove the "analyzing" message
+        const newMessages = [...prev];
+        newMessages.pop();
+        
+        // Add the actual recommendations
+        return [...newMessages, { 
+          text: data.response, 
+          sender: 'bot',
+          isRecommendation: true 
+        }];
+      });
+
+      // Hide the recommendation button after it's been used once
+      setShowRecommendButton(false);
+      
+    } catch (error) {
+      console.error('Recommendations error:', error);
+      
+      // Handle different error types
+      if (error.error === 'Personalized recommendations are only available for startup profiles') {
+        setMessages(prev => [...prev, { 
+          text: "Personalized recommendations are only available for startup users. If you're an investor, you can explore startups in the 'Explore' section instead.", 
+          sender: 'bot' 
+        }]);
+      } else {
+        setMessages(prev => [...prev, { 
+          text: "I'm sorry, I couldn't retrieve personalized recommendations at this time. Please try again later.", 
+          sender: 'bot' 
+        }]);
+      }
+      
+      // Keep the button available if there was an error
+      setShowRecommendButton(true);
+      
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
   return (
     <div className="fixed bottom-4 right-4 z-50">
       {/* Chat toggle button */}
@@ -123,7 +188,7 @@ const Chatbot = () => {
       
       {/* Chat window */}
       {isOpen && (
-        <div className="absolute bottom-16 right-0 w-80 h-96 bg-white rounded-lg shadow-xl flex flex-col overflow-hidden border border-gray-200">
+        <div className="absolute bottom-16 right-0 w-96 h-[28rem] bg-white rounded-lg shadow-xl flex flex-col overflow-hidden border border-gray-200">
           {/* Chat header */}
           <div className="bg-violet-600 text-white p-4 flex justify-between items-center">
             <div className="flex items-center">
@@ -151,12 +216,20 @@ const Chatbot = () => {
                 className={`mb-3 ${message.sender === 'user' ? 'text-right' : ''}`}
               >
                 <div 
-                  className={`inline-block rounded-lg px-3 py-2 max-w-[80%] ${
+                  className={`inline-block rounded-lg px-3 py-2 max-w-[85%] ${
                     message.sender === 'user' 
                       ? 'bg-violet-600 text-white' 
-                      : 'bg-gray-200 text-gray-800'
-                  }`}
+                      : message.isRecommendation
+                        ? 'bg-indigo-100 text-gray-800 border border-indigo-300'
+                        : 'bg-gray-200 text-gray-800'
+                  } ${message.className || ''}`}
                 >
+                  {message.isRecommendation && (
+                    <div className="flex items-center mb-1 text-indigo-600 font-semibold text-sm">
+                      <Lightbulb className="h-4 w-4 mr-1" />
+                      Personalized Recommendations
+                    </div>
+                  )}
                   {message.text}
                 </div>
               </div>
@@ -175,27 +248,44 @@ const Chatbot = () => {
             <div ref={messagesEndRef} />
           </div>
           
-          {/* Chat input */}
-          <form 
-            onSubmit={handleSendMessage}
-            className="border-t border-gray-200 p-3 flex items-center"
-          >
-            <input 
-              type="text" 
-              value={inputMessage}
-              onChange={(e) => setInputMessage(e.target.value)}
-              placeholder="Type a message..."
-              className="flex-1 border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-violet-500"
-              disabled={isLoading}
-            />
-            <button 
-              type="submit"
-              className={`ml-2 ${isLoading ? 'bg-gray-400' : 'bg-violet-600 hover:bg-violet-700'} text-white rounded-full p-2`}
-              disabled={!inputMessage.trim() || isLoading}
+          {/* Chat actions */}
+          <div className="border-t border-gray-200">
+            {/* Recommendation button - only show for online mode and if not already used */}
+            {!useLocalMode && showRecommendButton && (
+              <div className="px-3 py-2 border-b border-gray-200">
+                <button
+                  onClick={handleGetRecommendations}
+                  disabled={isLoading}
+                  className="w-full flex items-center justify-center gap-2 bg-indigo-50 hover:bg-indigo-100 text-indigo-700 rounded-md px-3 py-2 text-sm font-medium transition-colors"
+                >
+                  <Lightbulb className="h-4 w-4" />
+                  Get Startup Recommendations
+                </button>
+              </div>
+            )}
+            
+            {/* Chat input */}
+            <form 
+              onSubmit={handleSendMessage}
+              className="p-3 flex items-center"
             >
-              <Send className="h-4 w-4" />
-            </button>
-          </form>
+              <input 
+                type="text" 
+                value={inputMessage}
+                onChange={(e) => setInputMessage(e.target.value)}
+                placeholder="Type a message..."
+                className="flex-1 border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-violet-500"
+                disabled={isLoading}
+              />
+              <button 
+                type="submit"
+                className={`ml-2 ${isLoading ? 'bg-gray-400' : 'bg-violet-600 hover:bg-violet-700'} text-white rounded-full p-2`}
+                disabled={!inputMessage.trim() || isLoading}
+              >
+                <Send className="h-4 w-4" />
+              </button>
+            </form>
+          </div>
         </div>
       )}
     </div>
