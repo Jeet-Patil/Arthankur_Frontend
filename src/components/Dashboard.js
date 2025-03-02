@@ -1,23 +1,64 @@
 import React, { useEffect, useState } from 'react';
-import { jwtDecode } from 'jwt-decode';
+import axios from 'axios';
 import Navbar from './Navbar';
 import SuccessStories from './SuccessStories';
+import { toast } from 'react-hot-toast';
+import { getUserData, clearUserData } from '../utils/auth';
 
 const Dashboard = () => {
     const [userType, setUserType] = useState(null);
     const [userData, setUserData] = useState(null);
+    const [isLoading, setIsLoading] = useState(true);
 
     useEffect(() => {
-        const token = localStorage.getItem('token');
-        if (token) {
-            try {
-                const decoded = jwtDecode(token);
-                setUserType(decoded.userType);
-                setUserData(decoded);
-            } catch (error) {
-                console.error('Error decoding token:', error);
+        const fetchUserData = async () => {
+            setIsLoading(true);
+            const authData = getUserData();
+            
+            if (!authData.token || !authData.userId) {
+                console.error('No token or user ID found');
+                setIsLoading(false);
+                return;
             }
-        }
+
+            try {
+                // First, just set the user type from authData
+                setUserType(authData.userType);
+                
+                // Fetch full user data from the API
+                const config = {
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'x-auth-token': authData.token
+                    }
+                };
+                
+                console.log('Fetching current user data');
+                const response = await axios.get('http://localhost:5000/api/users/me', config);
+                console.log('User data response:', response.data);
+                setUserData(response.data);
+            } catch (error) {
+                console.error('Error fetching user data:', error);
+                
+                // More detailed error logging for debugging
+                if (error.response) {
+                    console.error('Response error data:', error.response.data);
+                    console.error('Response error status:', error.response.status);
+                } 
+                
+                if (error.response && error.response.status === 401) {
+                    // Handle invalid or expired token
+                    clearUserData();
+                    toast.error('Session expired. Please login again.');
+                } else {
+                    toast.error('Error loading dashboard data');
+                }
+            } finally {
+                setIsLoading(false);
+            }
+        };
+
+        fetchUserData();
     }, []);
 
     const StartupDashboard = () => (
@@ -51,7 +92,7 @@ const Dashboard = () => {
                 <div className="bg-white p-6 rounded-lg shadow-md hover:shadow-lg transition-shadow">
                     <h2 className="text-xl font-semibold mb-4">Government Schemes</h2>
                     <p className="text-gray-600 mb-4">View eligible government schemes and benefits</p>
-                    <a href="/schemes" className="text-violet-600 hover:text-violet-800">View details →</a>
+                    <a href="/government-schemes" className="text-violet-600 hover:text-violet-800">View details →</a>
                 </div>
                 <div className="bg-white p-6 rounded-lg shadow-md hover:shadow-lg transition-shadow">
                     <h2 className="text-xl font-semibold mb-4">Financial Tools</h2>
@@ -123,6 +164,20 @@ const Dashboard = () => {
             </div>
         </div>
     );
+
+    if (isLoading) {
+        return (
+            <div className="min-h-screen bg-gray-50">
+                <Navbar />
+                <div className="max-w-7xl mx-auto px-4 py-6 flex justify-center items-center h-[70vh]">
+                    <div className="text-center">
+                        <div className="inline-block animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-violet-500 mb-4"></div>
+                        <p className="text-gray-600">Loading your dashboard...</p>
+                    </div>
+                </div>
+            </div>
+        );
+    }
 
     return (
         <div className="min-h-screen bg-gray-50">

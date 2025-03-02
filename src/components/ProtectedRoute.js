@@ -1,28 +1,33 @@
 import { Navigate } from 'react-router-dom';
-import { jwtDecode } from 'jwt-decode';
+import { toast } from 'react-hot-toast';
+import { isAuthenticated, getUserData, clearUserData } from '../utils/auth';
 
 const ProtectedRoute = ({ children, allowedUserTypes = ['startup', 'investor'] }) => {
-    const token = localStorage.getItem('token');
-    
-    if (!token) {
+    // Check if user is authenticated
+    if (!isAuthenticated()) {
         // Store the attempted URL to redirect back after login
         const currentPath = window.location.pathname;
         localStorage.setItem('redirectPath', currentPath);
+        toast.error('Please login to continue');
         return <Navigate to="/login" replace />;
     }
 
-    // Check if user type is allowed to access this route
-    try {
-        const decoded = jwtDecode(token);
-        const userType = decoded.userType;
-        
-        if (!allowedUserTypes.includes(userType)) {
-            return <Navigate to="/dashboard" replace />;
-        }
-    } catch (error) {
-        console.error('Error decoding token:', error);
-        localStorage.removeItem('token');
+    // Get user data
+    const userData = getUserData();
+    
+    // Check if user type exists
+    if (!userData.userType) {
+        console.error('No user type found in localStorage');
+        // Clear all auth data and redirect to login
+        clearUserData();
+        toast.error('Authentication error. Please login again.');
         return <Navigate to="/login" replace />;
+    }
+    
+    // Check if the user type is allowed to access this route
+    if (!allowedUserTypes.includes(userData.userType)) {
+        toast.error('You do not have permission to access this page');
+        return <Navigate to="/dashboard" replace />;
     }
 
     return children;

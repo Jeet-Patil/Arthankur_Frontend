@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useNavigate, useLocation } from 'react-router-dom';
-import { jwtDecode } from 'jwt-decode';
-import { getUserProfile } from '../services/api';
+import { getUserData, clearUserData } from '../utils/auth';
 
 const Navbar = () => {
     const navigate = useNavigate();
@@ -12,42 +11,23 @@ const Navbar = () => {
     const [isProfileMenuOpen, setIsProfileMenuOpen] = useState(false);
 
     useEffect(() => {
-        const token = localStorage.getItem('token');
-        if (token) {
-            try {
-                const decoded = jwtDecode(token);
-                setUserType(decoded.userType);
-                
-                // Check if name exists in localStorage first
-                const storedName = localStorage.getItem('userName');
-                if (storedName) {
-                    setUserName(storedName);
-                }
-                
-                // Still fetch from API to ensure we have the latest data
-                fetchUserData(decoded.userId);
-            } catch (error) {
-                console.error('Error decoding token:', error);
+        // Get user data from auth utilities instead of decoding JWT
+        const userData = getUserData();
+        if (userData.token) {
+            setUserType(userData.userType);
+            
+            // Use name from auth utilities
+            if (userData.userName) {
+                setUserName(userData.userName);
             }
+            
+            // No need to fetch from API since we're using the utility functions
         }
     }, []);
 
-    const fetchUserData = async (userId) => {
-        try {
-            const userData = await getUserProfile(userId);
-            if (userData && userData.name) {
-                setUserName(userData.name);
-                localStorage.setItem('userName', userData.name);
-            }
-        } catch (error) {
-            console.error('Error fetching user data:', error);
-        }
-    };
-
     const handleLogout = () => {
-        localStorage.removeItem('token');
-        localStorage.removeItem('userType');
-        localStorage.removeItem('userName');
+        // Use auth utility to clear user data
+        clearUserData();
         navigate('/login');
     };
 

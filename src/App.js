@@ -4,6 +4,7 @@ import { Toaster } from 'react-hot-toast';
 import Landing from './components/Landing';
 import Login from './components/Login';
 import Register from './components/Register';
+import ForgotPassword from './components/ForgotPassword';
 import DashboardRouter from './components/DashboardRouter';
 import ProtectedRoute from './components/ProtectedRoute';
 import FinancialTools from './components/financial/FinancialTools';
@@ -16,6 +17,7 @@ import UserProfile from './components/UserProfile';
 import Meeting from './components/Meeting';
 import Notifications from './components/Notifications';
 import Chatbot from './components/Chatbot';
+import GovernmentSchemes from './components/GovernmentSchemes';
 import './App.css';
 
 // These will be created later or already exist
@@ -46,6 +48,7 @@ const App = () => {
           <Route path="/" element={<Landing />} />
           <Route path="/login" element={<Login />} />
           <Route path="/register" element={<Register />} />
+          <Route path="/forgot-password" element={<ForgotPassword />} />
           
           {/* Protected Routes for both user types */}
           <Route
@@ -117,6 +120,15 @@ const App = () => {
             element={
               <ProtectedRoute allowedUserTypes={['startup']}>
                 <Schemes />
+              </ProtectedRoute>
+            }
+          />
+          
+          <Route
+            path="/government-schemes"
+            element={
+              <ProtectedRoute allowedUserTypes={['startup']}>
+                <GovernmentSchemes />
               </ProtectedRoute>
             }
           />
