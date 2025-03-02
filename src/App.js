@@ -18,6 +18,7 @@ import Meeting from './components/Meeting';
 import Notifications from './components/Notifications';
 import Chatbot from './components/Chatbot';
 import GovernmentSchemes from './components/GovernmentSchemes';
+import CaseStudies from './components/casestudies/CaseStudies';
 import './App.css';
 
 // These will be created later or already exist
@@ -189,10 +190,10 @@ const App = () => {
           />
           
           <Route
-            path="/virtual-pitch/:roomId"
+            path="/case-studies"
             element={
               <ProtectedRoute>
-                <VirtualPitch />
+                <CaseStudies />
               </ProtectedRoute>
             }
           />

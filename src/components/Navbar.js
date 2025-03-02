@@ -62,6 +62,7 @@ const Navbar = () => {
         { path: '/tax-compliance', label: 'Tax & Compliance' },
         { path: '/schemes', label: 'Schemes' },
         { path: '/community', label: 'Community' },
+        { path: '/case-studies', label: 'Case Studies' },
         { path: '/payments', label: 'Payments' },
     ];
 
@@ -70,6 +71,7 @@ const Navbar = () => {
         { path: '/meetings', label: 'Meetings' },
         { path: '/community', label: 'Community' },
         { path: '/explore-startups', label: 'Explore Startups' },
+        { path: '/case-studies', label: 'Case Studies' },
         { path: '/payment', label: 'Payment' }
     ];
 
