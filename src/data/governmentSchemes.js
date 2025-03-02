@@ -10,8 +10,8 @@ const governmentSchemes = [
       { label: 'Eligibility', value: 'DPIIT Recognized Startups' },
       { label: 'Focus Sectors', value: 'All Sectors' }
     ],
-    website: 'https://www.startupindia.gov.in/content/sih/en/government-schemes/seed-fund-scheme.html',
-    applicationUrl: 'https://www.startupindia.gov.in/content/sih/en/government-schemes/seed-fund-scheme.html',
+    website: 'https://seedfund.startupindia.gov.in/',
+    applicationUrl: 'https://seedfund.startupindia.gov.in/',
     eligibilityCriteria: {
       startupStage: ['Ideation', 'Validation', 'Early Traction'],
       industryType: ['Agriculture', 'EdTech', 'FinTech', 'Healthcare', 'IT/Software', 'Manufacturing', 'Retail', 'Clean Energy', 'Transportation', 'Others'],
@@ -33,7 +33,7 @@ const governmentSchemes = [
       { label: 'Sector Focus', value: 'Manufacturing & Service' }
     ],
     website: 'https://www.cgtmse.in/',
-    applicationUrl: 'https://www.cgtmse.in/Apply',
+    applicationUrl: 'https://www.cgtmse.in/',
     eligibilityCriteria: {
       startupStage: ['Early Traction', 'Scaling', 'Established'],
       industryType: ['Agriculture', 'Manufacturing', 'Retail', 'Clean Energy', 'Transportation', 'Others'],
@@ -55,7 +55,7 @@ const governmentSchemes = [
       { label: 'Target Beneficiaries', value: 'SC/ST & Women' }
     ],
     website: 'https://www.standupmitra.in/',
-    applicationUrl: 'https://www.standupmitra.in/Registration/BorrowerRegistration',
+    applicationUrl: 'https://site.udyamimitra.in/Login/Register#NoBack',
     eligibilityCriteria: {
       startupStage: ['Validation', 'Early Traction', 'Scaling'],
       industryType: ['Agriculture', 'Manufacturing', 'Retail', 'Clean Energy', 'Transportation', 'Others'],
@@ -77,7 +77,7 @@ const governmentSchemes = [
       { label: 'Focus Area', value: 'Innovation & R&D' }
     ],
     website: 'https://aim.gov.in/',
-    applicationUrl: 'https://aim.gov.in/schemes.php',
+    applicationUrl: 'https://aim.gov.in/',
     eligibilityCriteria: {
       startupStage: ['Ideation', 'Validation', 'Early Traction'],
       industryType: ['EdTech', 'FinTech', 'Healthcare', 'IT/Software', 'Clean Energy'],
@@ -121,7 +121,7 @@ const governmentSchemes = [
       { label: 'Target Group', value: 'Individuals, SHGs, Trusts' }
     ],
     website: 'https://msme.gov.in/schemes/prime-ministers-employment-generation-programme-pmegp',
-    applicationUrl: 'https://www.kviconline.gov.in/pmegpeportal/pmegphome/index.jsp',
+    applicationUrl: 'https://www.kviconline.gov.in/pmegpeportal/jsp/pmegponline.jsp',
     eligibilityCriteria: {
       startupStage: ['Ideation', 'Validation', 'Early Traction'],
       industryType: ['Agriculture', 'Manufacturing', 'Retail', 'Others'],
@@ -142,8 +142,8 @@ const governmentSchemes = [
       { label: 'Target Group', value: 'SC/ST Entrepreneurs' },
       { label: 'Benefits', value: 'Market Access & Training' }
     ],
-    website: 'https://nssh.msme.gov.in/',
-    applicationUrl: 'https://nssh.msme.gov.in/NSSHO/Membership/ApplicationForm',
+    website: 'https://www.scsthub.in/',
+    applicationUrl: 'https://scsthub.in/nssh-schemes/home/userRegistration',
     eligibilityCriteria: {
       startupStage: ['Validation', 'Early Traction', 'Scaling', 'Established'],
       industryType: ['Agriculture', 'Manufacturing', 'Retail', 'Others'],
@@ -164,7 +164,7 @@ const governmentSchemes = [
       { label: 'Investment Mode', value: 'Through AIFs' },
       { label: 'Eligibility', value: 'DPIIT Recognized Startups' }
     ],
-    website: 'https://www.startupindia.gov.in/content/sih/en/government-schemes/fund-of-funds.html',
+    website: 'https://www.sidbivcf.in/en/funds/ffs',
     applicationUrl: null,
     eligibilityCriteria: {
       startupStage: ['Early Traction', 'Scaling'],
